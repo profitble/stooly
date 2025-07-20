@@ -25,7 +25,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.stooly.app',
-    buildNumber: '15',
+    buildNumber: '3',
     config: {
       usesNonExemptEncryption: false,
     },
@@ -57,7 +57,7 @@ const config: ExpoConfig = {
       backgroundColor: '#FFFFFF',
     },
     package: 'com.stooly.app',
-    versionCode: 15,
+    versionCode: 3,
   },
   plugins: [
     "expo-router",
@@ -88,7 +88,9 @@ const config: ExpoConfig = {
     eas: {
       projectId: "e24bd6e6-aac9-4740-ad43-643f93ab8e45"
     },
-    REVENUECAT_API_KEY_IOS: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
+    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
+    supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+    revenueCatApiKeyIos: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
   },
   owner: "maxta"
 };
