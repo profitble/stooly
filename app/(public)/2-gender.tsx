@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 4 },
   },
-  nextText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', color: '#fff' },
+  nextText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', color: '#fff', fontWeight: '600' },
   genderContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -193,5 +193,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20,
   },
-  genderText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium' },
+  genderText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', fontWeight: '600' },
 }); 

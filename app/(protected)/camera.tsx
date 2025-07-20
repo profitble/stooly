@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -52,6 +52,8 @@ export default function CameraScreen() {
         router.replace('/(protected)/home');
 
       } catch (e) {
+        console.error('Failed to take picture:', e);
+        Alert.alert('Camera Issue', 'Can\'t take photo. Try again.', [{ text: 'OK' }]);
       }
     }
   };
@@ -88,6 +90,7 @@ export default function CameraScreen() {
         style={StyleSheet.absoluteFill}
         facing={facing}
         flash={flash}
+        enableTorch={flash === 'on'}
         ref={cameraRef}
       />
 

@@ -12,7 +12,7 @@ const env = configEnvSchema.parse(process.env);
 const config: ExpoConfig = {
   name: "Stooly",
   slug: "stooly",
-  version: "1.0.1",
+  version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "light",
@@ -25,16 +25,16 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.maxta.stooly",
-    buildNumber: "2",
+    buildNumber: "3",
     infoPlist: {
       UIBackgroundModes: ["remote-notification", "fetch"],
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
       SKPaymentTransactions: true,
-      NSCameraUsageDescription: "This app uses the camera to provide certain features.",
+      NSCameraUsageDescription: "We use the camera to let you take photos inside the app.",
       NSLocationWhenInUseUsageDescription: "This app may request location access to enable certain features.",
       NSUserNotificationUsageDescription: "This app may send you notifications to keep you informed.",
-      UIRequiresFullScreen: true,
+      UIRequiresFullScreen: false,
       UISupportedInterfaceOrientations: [
         "UIInterfaceOrientationPortrait",
         "UIInterfaceOrientationPortraitUpsideDown"
@@ -44,10 +44,6 @@ const config: ExpoConfig = {
         "UIInterfaceOrientationPortraitUpsideDown"
       ]
     }
-  },
-  android: {
-    package: "com.maxta.stooly",
-    permissions: ["CAMERA", "NOTIFICATIONS"],
   },
   plugins: [
     "expo-router",

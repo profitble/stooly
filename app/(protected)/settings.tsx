@@ -34,7 +34,7 @@ export default function SettingsScreen() {
   const handleClearData = () => {
     Alert.alert(
       'Delete All Data',
-      'Are you sure? This action cannot be undone.',
+      'Are you sure? This will delete everything and can\'t be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -46,7 +46,7 @@ export default function SettingsScreen() {
               // After clearing data, redirect to a fresh home screen
               router.replace('/(protected)/home');
             } catch (error) {
-              Alert.alert('Error', 'Failed to delete all data. Please try again.');
+              Alert.alert('Error', 'Couldn\'t delete data. Please try again.');
             }
           },
         },

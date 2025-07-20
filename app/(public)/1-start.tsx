@@ -33,7 +33,6 @@ export default function SigninScreen() {
           <Image
             source={require('@/assets/images/cover.png')}
             style={styles.hero}
-            resizeMode="contain"
           />
         </View>
 
@@ -64,10 +63,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f4f1f4',
-    justifyContent: 'space-between',
   },
   contentWrapper: {
+    flex: 1,
     alignItems: 'center',
+    justifyContent: 'flex-start',
     width: '100%',
   },
   heroWrapper: {
@@ -78,8 +78,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: SIDE_MARGIN,
   },
   hero: {
-    width: 450,
+    width: '100%',
     height: 450,
+    maxWidth: 400,
+    resizeMode: 'contain',
   },
   textWrapper: {
     paddingHorizontal: SIDE_MARGIN,
@@ -116,6 +118,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontFamily: 'SFProDisplay-Medium',
+    fontWeight: '600',
   },
   footerWrapper: {
     width: '100%',

@@ -254,7 +254,7 @@ export default function HomeScreen() {
             ) : (
               <>
                 <Text style={styles.emptyHeader}>No analysis yet</Text>
-                <Text style={styles.emptyText}>Tap the + button to analyze your first stool.</Text>
+                <Text style={styles.emptyText}>Tap the [+] button to analyze your first stool.</Text>
               </>
             )}
           </View>
@@ -320,8 +320,8 @@ export default function HomeScreen() {
               ))
             ) : (
               <View style={styles.emptyCard}>
-                <Text style={styles.emptyHeader}>No poops logged yet</Text>
-                <Text style={styles.emptyText}>Tap the + button to get started.</Text>
+                <Text style={styles.emptyHeader}>No stools logged yet.</Text>
+                <Text style={styles.emptyText}>Tap the [+] button to get started.</Text>
               </View>
             )}
           </View>

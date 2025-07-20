@@ -28,12 +28,12 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetError
     <View style={styles.container}>
       <FontAwesome5 name="exclamation-circle" size={48} color={themeColors.primary} style={styles.icon} />
       <Text style={styles.title}>
-        {isSubscriptionError ? 'Subscription Error' : 'Something went wrong'}
+        {isSubscriptionError ? 'Subscription Issue' : 'Something Went Wrong'}
       </Text>
       <Text style={styles.message}>
         {isSubscriptionError 
-          ? 'There was a problem verifying your subscription. Please try again.'
-          : 'An unexpected error occurred. Please try again.'}
+          ? 'Couldn\'t check your subscription. Try again.'
+          : 'Please try again.'}
       </Text>
       <Pressable
         style={styles.button}

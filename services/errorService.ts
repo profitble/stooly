@@ -2,25 +2,25 @@ import { Alert } from 'react-native';
 
 const errorMessages: { [key: string]: string } = {
   'Missing or invalid image (base64)': 
-    'We couldn’t use the photo — please try taking it again.',
+    'Couldn\'t use the photo – try taking it again.',
 
   'DeepSeek API failed': 
-    'We couldn’t check the photo right now — please try again later.',
+    'Can\'t check the photo right now – try again later.',
 
   'No content returned from DeepSeek':
-    'We couldn’t get results — try a clearer photo.',
+    'Didn\'t get results – try a clearer photo.',
 
   'Could not extract valid JSON from response':
-    'Something went wrong — please try again in a bit.',
+    'Something went wrong – try again in a bit.',
 
   'No stool detected': 
-    'We didn’t see a stool — please try again with a better angle.',
+    'No stool detected – try another angle.',
 
   'Image is too blurry':
-    'The photo is too blurry — try taking a sharper one.',
+    'Photo is blurry – take a sharper one.',
 };
 
-const defaultErrorMessage = 'Something went wrong — please try again.';
+const defaultErrorMessage = 'Something went wrong – try again.';
 
 export function presentError(error: any): void {
   const errorMessage = error?.message || (typeof error === 'string' ? error : 'Unknown error');

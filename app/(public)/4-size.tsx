@@ -384,5 +384,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontFamily: 'SFProDisplay-Medium',
     color: '#fff',
+    fontWeight: '600',
   },
 }); 

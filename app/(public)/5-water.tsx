@@ -62,7 +62,7 @@ export default function ReviewScreen() {
       </View>
 
       <View style={{ paddingHorizontal: SIDE_MARGIN }}>
-        <Text style={styles.title}>How many cups of water{"\n"}do you drink per day?</Text>
+        <Text style={styles.title}>How many cups of water do you drink{"\n"}per day?</Text>
         <Text style={styles.subtitle}>This will be used to calibrate your{"\n"}custom plan.</Text>
       </View>
 
@@ -202,7 +202,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 4 },
   },
-  nextText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', color: '#fff' },
+  nextText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', color: '#fff', fontWeight: '600' },
   optionContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -226,6 +226,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  optionTitle: { fontSize: 15, fontFamily: 'SFProDisplay-Bold' },
-  optionDesc: { fontSize: 12, fontFamily: 'SFProDisplay-Medium', marginTop: 4 },
+  optionTitle: { fontSize: 15, fontFamily: 'SFProDisplay-Bold', fontWeight: '600' },
+  optionDesc: { fontSize: 12, fontFamily: 'SFProDisplay-Medium', marginTop: 4, fontWeight: '600' },
 }); 

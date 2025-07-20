@@ -49,15 +49,15 @@ export default function PaywallScreen() {
 
       setOffering(offerings.current);
     } catch (error) {
-      let errorMessage = 'There was a problem setting up subscriptions. Please try again later.';
+      let errorMessage = 'Setting up subscriptions. Please try again soon.';
       
       if (error instanceof Error) {
         switch (error.message) {
           case 'No subscription options available':
-            errorMessage = 'Unable to load subscription options. Please check your internet connection and try again.';
+            errorMessage = 'Can\'t load subscription options. Check your internet and try again.';
             break;
           case 'RevenueCat not initialized':
-            errorMessage = 'The subscription service is initializing. Please try again in a moment.';
+            errorMessage = 'Setting up subscriptions. Please try again soon.';
             break;
         }
       }
@@ -75,7 +75,7 @@ export default function PaywallScreen() {
       }
     } catch (e: any) {
       if (e.code !== PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
-        Alert.alert('Error', e.message);
+        Alert.alert('Purchase Error', e.message);
       }
     } finally {
       setIsPurchasing(false);
@@ -90,11 +90,11 @@ export default function PaywallScreen() {
       if (hasSubscription) {
         router.replace('/(protected)/home');
       } else {
-        Alert.alert('No Active Subscription', 'No active subscription was found to restore.');
+        Alert.alert('Restore Purchase', 'No subscription found to restore.');
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
-      Alert.alert('Restore Error', `Failed to restore purchases: ${errorMessage}`);
+      Alert.alert('Restore Purchase', 'Couldn\'t restore purchases. Please try again.');
     }
   };
 
