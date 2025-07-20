@@ -11,7 +11,7 @@ const env = configEnvSchema.parse(process.env);
 
 const config: ExpoConfig = {
   name: "Stooly",
-  slug: "stooly",
+  slug: "poop",
   version: "1.0.0",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
@@ -60,7 +60,7 @@ const config: ExpoConfig = {
       }
     ]
   ],
-  scheme: "stooly",
+  scheme: "poop",
   platforms: ["ios"],
   web: {
     bundler: "metro"
@@ -73,7 +73,7 @@ const config: ExpoConfig = {
       origin: false
     },
     eas: {
-      projectId: "c3e6cfc6-a45b-4960-b596-221c2b69f093"
+      projectId: "9fbde21a-d8f9-4afe-bb34-c7d05e7690ce"
     },
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,

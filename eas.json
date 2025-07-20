@@ -17,7 +17,6 @@
   "submit": {
     "production": {
       "ios": {
-        "appleTeamId": "5YF866L55Q",
         "ascApiKeyPath": "assets/credentials/AuthKey_VTYA6ANHMA.p8",
         "ascApiKeyId": "VTYA6ANHMA"
       }
