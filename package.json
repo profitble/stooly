@@ -89,7 +89,8 @@
           "@gluestack-ui/config",
           "@gluestack-ui/themed",
           "@mrakesh0608/react-native-loading-dots",
-          "react-native-keyboard-aware-scroll-view"
+          "react-native-keyboard-aware-scroll-view",
+          "@intercom/intercom-react-native"
         ],
         "listUnknownPackages": false
       }
