@@ -24,8 +24,11 @@ const config: ExpoConfig = {
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: "com.maxta.stooly",
-    buildNumber: "3",
+    bundleIdentifier: 'com.stooly.app',
+    buildNumber: '15',
+    config: {
+      usesNonExemptEncryption: false,
+    },
     infoPlist: {
       UIBackgroundModes: ["remote-notification", "fetch"],
       CFBundleAllowMixedLocalizations: true,
@@ -43,7 +46,18 @@ const config: ExpoConfig = {
         "UIInterfaceOrientationPortrait",
         "UIInterfaceOrientationPortraitUpsideDown"
       ]
-    }
+    },
+    entitlements: {
+      // ... your entitlements
+    },
+  },
+  android: {
+    adaptiveIcon: {
+      foregroundImage: './assets/images/adaptive-icon.png',
+      backgroundColor: '#FFFFFF',
+    },
+    package: 'com.stooly.app',
+    versionCode: 15,
   },
   plugins: [
     "expo-router",
@@ -52,15 +66,10 @@ const config: ExpoConfig = {
       "expo-build-properties",
       {
         ios: {
-          deploymentTarget: "15.1",
           useFrameworks: "static",
-          enableHermes: true,
-          hermesFlags: ["-O", "-shrink-level=2"]
+          deploymentTarget: "15.1",
+          hermesFlags: ["-O"],
         },
-        android: {
-          enableHermes: true,
-          hermesFlags: ["-O", "-shrink-level=2"]
-        }
       }
     ]
   ],
