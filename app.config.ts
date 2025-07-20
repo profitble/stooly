@@ -35,8 +35,6 @@ const config: ExpoConfig = {
       ITSAppUsesNonExemptEncryption: false,
       SKPaymentTransactions: true,
       NSCameraUsageDescription: "We use the camera to let you take photos inside the app.",
-      NSLocationWhenInUseUsageDescription: "This app may request location access to enable certain features.",
-      NSUserNotificationUsageDescription: "This app may send you notifications to keep you informed.",
       UIRequiresFullScreen: false,
       UISupportedInterfaceOrientations: [
         "UIInterfaceOrientationPortrait",
