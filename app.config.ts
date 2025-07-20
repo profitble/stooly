@@ -24,7 +24,7 @@ const config: ExpoConfig = {
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.stooly.app',
+    bundleIdentifier: 'com.maxta.poop',
     buildNumber: '1',
     config: {
       usesNonExemptEncryption: false,
