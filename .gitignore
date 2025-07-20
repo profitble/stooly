@@ -40,7 +40,6 @@ yarn-error.*
 
 # EAS Build
 /ios
-eas.json
 
 # @end expo-cli
 

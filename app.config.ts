@@ -25,7 +25,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.stooly.app',
-    buildNumber: '3',
+    buildNumber: '1',
     config: {
       usesNonExemptEncryption: false,
     },
@@ -47,17 +47,6 @@ const config: ExpoConfig = {
         "UIInterfaceOrientationPortraitUpsideDown"
       ]
     },
-    entitlements: {
-      // ... your entitlements
-    },
-  },
-  android: {
-    adaptiveIcon: {
-      foregroundImage: './assets/images/adaptive-icon.png',
-      backgroundColor: '#FFFFFF',
-    },
-    package: 'com.stooly.app',
-    versionCode: 3,
   },
   plugins: [
     "expo-router",
@@ -86,7 +75,7 @@ const config: ExpoConfig = {
       origin: false
     },
     eas: {
-      projectId: "e24bd6e6-aac9-4740-ad43-643f93ab8e45"
+      projectId: "c3e6cfc6-a45b-4960-b596-221c2b69f093"
     },
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
