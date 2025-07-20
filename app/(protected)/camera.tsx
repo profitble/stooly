@@ -52,7 +52,6 @@ export default function CameraScreen() {
         router.replace('/(protected)/home');
 
       } catch (e) {
-        console.error('Failed to take picture:', e);
       }
     }
   };

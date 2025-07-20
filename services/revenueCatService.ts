@@ -6,10 +6,12 @@ import Purchases, {
   PurchasesOfferings
 } from 'react-native-purchases';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getOrCreateAppUserId } from '@/utils/userId';
 
 const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
 const MAX_RETRY_DELAY = 5000;
+
 
 // RevenueCat Configuration Constants
 export const ENTITLEMENT_ID = 'stooly_unlimited';
@@ -24,6 +26,7 @@ interface InitializationResult {
 class RevenueCatService {
   private static instance: RevenueCatService;
   private isInitialized = false;
+  private appUserId: string | null = null;
 
   private constructor() {}
 
@@ -44,16 +47,17 @@ class RevenueCatService {
 
     for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
       try {
-        if (__DEV__) {
-          Purchases.setLogLevel(LOG_LEVEL.DEBUG);
-        }
-
         const apiKey = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
         if (!apiKey) {
           throw new Error('RevenueCat API key not configured');
         }
 
         await Purchases.configure({ apiKey });
+        
+        // Generate or retrieve secure app user ID
+        this.appUserId = await getOrCreateAppUserId();
+        await Purchases.logIn(this.appUserId);
+        
         await Purchases.getCustomerInfo();
         
         // Set email notification preferences to opted out
@@ -65,9 +69,6 @@ class RevenueCatService {
         this.isInitialized = true;
         return { success: true };
       } catch (error) {
-        if (__DEV__) {
-          console.warn(`RevenueCat initialization attempt ${attempt + 1} failed:`, error);
-        }
         lastError = error instanceof Error ? error : new Error(String(error));
         
         if (attempt < RETRY_ATTEMPTS - 1) {
@@ -98,9 +99,6 @@ class RevenueCatService {
       }
       return offerings;
     } catch (error) {
-      if (__DEV__) {
-        console.error('Failed to fetch offerings:', error);
-      }
       throw error;
     }
   }
@@ -113,7 +111,7 @@ class RevenueCatService {
       }
     }
 
-    return Purchases.getCustomerInfo();
+    return Purchases.getCustomerInfo({ forceRefresh: true });
   }
 
   async purchasePackage(packageIdentifier: string): Promise<CustomerInfo> {
@@ -156,10 +154,17 @@ class RevenueCatService {
       const customerInfo = await Purchases.restorePurchases();
       return customerInfo;
     } catch (error) {
-      if (__DEV__) {
-        console.error('Failed to restore purchases:', error);
-      }
       throw error;
+    }
+  }
+
+
+  async isSubscribed(): Promise<boolean> {
+    try {
+      const customerInfo = await this.getCustomerInfo();
+      return customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
+    } catch (error) {
+      return false;
     }
   }
 }

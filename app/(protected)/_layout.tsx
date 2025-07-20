@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { BackHandler, View } from 'react-native';
+import { BackHandler, View, ActivityIndicator } from 'react-native';
 import { revenueCatService, ENTITLEMENT_ID } from '@/services/revenueCatService';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
@@ -19,18 +19,32 @@ type RouteParams = {
 
 function ProtectedRoutes() {
   const router = useRouter();
-  let isMounted = true;
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    
     async function checkSubscription() {
       try {
         const customerInfo = await revenueCatService.getCustomerInfo();
-        if (!customerInfo.entitlements.active[ENTITLEMENT_ID] && isMounted) {
-          router.replace('/(public)/6-paywall');
+        const hasActiveSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
+        
+        if (isMounted) {
+          setIsSubscribed(hasActiveSubscription);
+          if (!hasActiveSubscription) {
+            router.replace('/6-paywall');
+            return;
+          }
         }
       } catch (error) {
         if (isMounted) {
-          throw error; // This will be caught by ErrorBoundary
+          setIsSubscribed(false);
+          router.replace('/6-paywall');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
         }
       }
     }
@@ -46,6 +60,18 @@ function ProtectedRoutes() {
       backHandler.remove();
     };
   }, [router]);
+
+  if (isLoading || isSubscribed === false) {
+    return (
+      <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator color="#fff" />
+      </SafeAreaView>
+    );
+  }
+
+  if (!isSubscribed) {
+    return null;
+  }
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background }}>

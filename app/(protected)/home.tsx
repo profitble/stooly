@@ -49,12 +49,14 @@ const colorToRingColorMap: { [key: string]: string } = {
   pale: themeColors.ringInactive,
 };
 
-const getTextureProgress = (appearance: string): number => {
+const getTextureProgress = (appearance?: string): number => {
+  if (!appearance) return 0;
   const map: { [key: string]: number } = { solid: 95, soft: 85, squishy: 75, hard: 50, loose: 40, mushy: 30, pebbly: 20 };
   return map[appearance.toLowerCase()] || 50;
 };
 
-const getAppearanceProgress = (color: string): number => {
+const getAppearanceProgress = (color?: string): number => {
+  if (!color) return 0;
   const map: { [key:string]: number } = { brown: 95, green: 70, yellow: 60, pale: 30, red: 20, black: 10 };
   return map[color.toLowerCase()] || 50;
 };
@@ -148,9 +150,9 @@ export default function HomeScreen() {
           if (hoursDiff < 1) {
             setTimeAgo('Just now');
           } else if (hoursDiff === 1) {
-            setTimeAgo('1 hour ago');
+            setTimeAgo('1 hr ago');
           } else {
-            setTimeAgo(`${hoursDiff} hours ago`);
+            setTimeAgo(`${hoursDiff} hrs ago`);
           }
         }
         
@@ -264,7 +266,7 @@ export default function HomeScreen() {
                 ? [
                     { amount: timeAgo, type: 'Last Poop', icon: Clock, color: '#ef4444', progress: getTimeProgress(hoursSinceLastPoop) },
                     { amount: capitalize(latestAnalysis.appearance), type: 'Texture', icon: Waves, color: '#f97316', progress: getTextureProgress(latestAnalysis.appearance) },
-                    { amount: capitalize(latestAnalysis.color), type: 'Appearance', icon: Drop, color: colorToRingColorMap[latestAnalysis.color.toLowerCase()] || themeColors.iconBlue, progress: getAppearanceProgress(latestAnalysis.color) },
+                    { amount: capitalize(latestAnalysis.color), type: 'Appearance', icon: Drop, color: colorToRingColorMap[latestAnalysis.color?.toLowerCase() || ''] || themeColors.iconBlue, progress: getAppearanceProgress(latestAnalysis.color) },
                   ]
                 : placeholderMacros
               ).map((macro, idx) => {

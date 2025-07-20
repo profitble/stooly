@@ -64,7 +64,6 @@ export default function RootLayout() {
           useNativeDriver: true,
         }).start();
       } catch (error) {
-        console.error('Failed to initialize:', error);
         // Still fade out smoothly on error
         if (fontsLoaded && isMounted) {
           await SplashScreen.hideAsync();

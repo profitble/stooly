@@ -11,7 +11,6 @@ export async function clearAllUserData(): Promise<void> {
   try {
     await AsyncStorage.multiRemove(USER_DATA_KEYS);
   } catch (error) {
-    console.error('Failed to clear user data:', error);
     throw new Error('Failed to clear user data.');
   }
 }

@@ -57,19 +57,16 @@ export async function analyzeImage(base64Data: string): Promise<{ success: boole
     });
 
     if (error) {
-      console.error('Supabase function error:', error);
       return { success: false, error: error.message };
     }
 
     if (data.error) {
-      console.error('Analysis function returned an error:', data.error);
       return { success: false, error: data.error };
     }
     
     return { success: true, data: data as AnalysisResult };
   } catch (e: unknown) {
     const errorMessage = e instanceof Error ? e.message : 'An unknown error occurred';
-    console.error('Error calling analysis function:', errorMessage);
     return { success: false, error: errorMessage };
   }
   */

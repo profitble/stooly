@@ -35,7 +35,7 @@ export default function PaywallScreen() {
       // Check existing entitlements first
       const customerInfo = await revenueCatService.getCustomerInfo();
       
-      if (customerInfo.entitlements.active[ENTITLEMENT_ID]) {
+      if (customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive) {
         router.replace('/(protected)/home');
         return;
       }
@@ -49,8 +49,6 @@ export default function PaywallScreen() {
 
       setOffering(offerings.current);
     } catch (error) {
-      console.error('RevenueCat setup failed:', error);
-      
       let errorMessage = 'There was a problem setting up subscriptions. Please try again later.';
       
       if (error instanceof Error) {
@@ -72,7 +70,7 @@ export default function PaywallScreen() {
     setIsPurchasing(true);
     try {
       const customerInfo = await revenueCatService.purchasePackage(PACKAGE_ID);
-      if (customerInfo?.entitlements.active[ENTITLEMENT_ID]) {
+      if (customerInfo?.entitlements.active[ENTITLEMENT_ID]?.isActive) {
         router.replace('/(protected)/home');
       }
     } catch (e: any) {
@@ -87,7 +85,7 @@ export default function PaywallScreen() {
   const handleRestore = async () => {
     try {
       const customerInfo = await revenueCatService.restorePurchases();
-      const hasSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID];
+      const hasSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive;
       
       if (hasSubscription) {
         router.replace('/(protected)/home');
@@ -202,6 +200,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontFamily: 'SFProDisplay-Bold',
+    fontWeight: '700',
     textAlign: 'center',
     color: '#111',
     marginBottom: 12,

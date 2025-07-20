@@ -3,8 +3,8 @@ import { z } from 'zod';
 
 const configEnvSchema = z.object({
   EXPO_PUBLIC_API_BASE_URL: z.string().url().optional(),
-  EXPO_PUBLIC_REVENUECAT_API_KEY_IOS: z.string().min(1).optional(),
   EXPO_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
+  EXPO_PUBLIC_REVENUECAT_API_KEY_IOS: z.string().min(1).optional(),
 }).optional();
 
 const env = configEnvSchema.parse(process.env);
@@ -12,7 +12,7 @@ const env = configEnvSchema.parse(process.env);
 const config: ExpoConfig = {
   name: "Stooly",
   slug: "stooly",
-  version: "1.0.0",
+  version: "1.0.1",
   orientation: "portrait",
   icon: "./assets/images/icon.png",
   userInterfaceStyle: "light",
@@ -25,7 +25,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.maxta.stooly",
-    buildNumber: "1",
+    buildNumber: "2",
     infoPlist: {
       UIBackgroundModes: ["remote-notification", "fetch"],
       CFBundleAllowMixedLocalizations: true,

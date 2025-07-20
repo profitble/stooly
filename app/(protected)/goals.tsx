@@ -113,7 +113,7 @@ export default function GoalsScreen() {
   useEffect(() => {
     initializeGoals()
       .then(setGoals)
-      .catch(console.error);
+      .catch(() => {});
   }, []);
 
   useFocusEffect(

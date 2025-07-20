@@ -53,7 +53,6 @@ async function getCurrentGoals(): Promise<Goal[]> {
     }
     return goals;
   } catch (e) {
-    console.error("Failed to get current goals", e);
     return [];
   }
 }
@@ -62,7 +61,6 @@ async function saveCurrentGoals(goals: Goal[]): Promise<void> {
   try {
     await AsyncStorage.setItem(CURRENT_GOALS_KEY, JSON.stringify(goals));
   } catch (e) {
-    console.error("Failed to save goals", e);
   }
 }
 
@@ -140,6 +138,5 @@ export async function clearAllGoals(): Promise<void> {
     await AsyncStorage.removeItem(CURRENT_GOALS_KEY);
     await AsyncStorage.removeItem(DELETED_GOALS_QUEUE_KEY);
   } catch (e) {
-    console.error("Failed to clear all goals", e);
   }
 } 
