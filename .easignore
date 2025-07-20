@@ -1,0 +1,2 @@
+# Ignore local native directories during EAS builds
+ios/
