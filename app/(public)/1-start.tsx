@@ -42,7 +42,7 @@ export default function SigninScreen() {
           alt="A cartoon poop emoji in a toilet."
           sx={{
             width: '100%',
-            height: '100%',
+            aspectRatio: 1,
             maxWidth: 400,
           }}
         />
@@ -94,7 +94,7 @@ export default function SigninScreen() {
         <Button
           onPress={handleContinue}
           width="100%"
-          backgroundColor="#010103"
+          backgroundColor="$primary"
           justifyContent="center"
           alignItems="center"
           sx={{

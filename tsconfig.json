@@ -31,7 +31,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "types/env.d.ts"
+    "types/env.d.ts",
+    "nativewind-env.d.ts"
   ],
   "exclude": [
     "node_modules",

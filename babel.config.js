@@ -10,6 +10,12 @@ module.exports = function (api) {
           "~": "."
         }
       }],
+      [
+        '@gluestack-style/babel-plugin-styled-resolver',
+        {
+          configPath: './styles/gluestack-ui.config.ts',
+        },
+      ],
       'transform-remove-console'
     ],
   };

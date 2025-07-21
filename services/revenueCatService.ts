@@ -7,6 +7,7 @@ import Purchases, {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getOrCreateAppUserId } from '@/utils/userId';
 import { Platform } from 'react-native';
+import { validateAndGetEnv } from '@/utils/env';
 
 const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
@@ -47,8 +48,9 @@ class RevenueCatService {
 
     for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
       try {
+        const env = validateAndGetEnv();
         const apiKey = Platform.select({
-          ios: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
+          ios: env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
           default: null,
         });
 
