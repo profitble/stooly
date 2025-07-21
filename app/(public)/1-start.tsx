@@ -1,15 +1,17 @@
 import React from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
-  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { headingLarge, bodyLarge, buttonText } from '@/styles/fonts';
+import {
+  Box,
+  Text,
+  Button,
+  ButtonText,
+  Image,
+} from '@gluestack-ui/themed';
 import { horizontalScale, verticalScale, moderateScale } from '@/styles/sizing';
 
 const SIDE_MARGIN = horizontalScale(26);
@@ -25,33 +27,94 @@ export default function SigninScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.contentWrapper}>
+      <Box
+        flex={1}
+        justifyContent="center"
+        alignItems="center"
+        sx={{
+          paddingHorizontal: SIDE_MARGIN,
+          paddingBottom: verticalScale(250),
+        }}
+      >
         <Image
           source={require('@/assets/images/cover.png')}
-          style={styles.hero}
           resizeMode="contain"
+          alt="A cartoon poop emoji in a toilet."
+          sx={{
+            width: '100%',
+            height: '100%',
+            maxWidth: 400,
+          }}
         />
-      </View>
+      </Box>
 
-      <View style={[styles.overlay, { paddingBottom: insets.bottom > 0 ? insets.bottom + 50 : 170 }]}>
-        <View style={styles.textWrapper}>
-          <Text style={styles.title}>
-            Welcome to <Text style={styles.titleAccent}>Stooly</Text>
+      <Box
+        position="absolute"
+        bottom={0}
+        left={0}
+        right={0}
+        backgroundColor="$background"
+        alignItems="center"
+        sx={{
+          paddingHorizontal: SIDE_MARGIN,
+          paddingTop: verticalScale(32),
+          paddingBottom: insets.bottom > 0 ? insets.bottom + 50 : 170,
+        }}
+      >
+        <Box
+          width="100%"
+          sx={{
+            marginBottom: verticalScale(32),
+          }}
+        >
+          <Text
+            textAlign="center"
+            color="$primaryText"
+            fontWeight="$bold"
+            letterSpacing={-0.4}
+            sx={{
+              fontSize: moderateScale(36),
+            }}
+          >
+            Welcome to <Text color="$primary">Stooly</Text>
           </Text>
-          <Text style={styles.subtitle}>
+          <Text
+            textAlign="center"
+            color="$secondaryText"
+            fontWeight="$regular"
+            sx={{
+              fontSize: moderateScale(18),
+              marginTop: verticalScale(12),
+            }}
+          >
             Build Habits Towards Better Gut Health
           </Text>
-        </View>
+        </Box>
 
-        <TouchableOpacity
-          style={styles.startBtn}
+        <Button
           onPress={handleContinue}
+          width="100%"
+          backgroundColor="#010103"
+          justifyContent="center"
+          alignItems="center"
+          sx={{
+            height: BUTTON_HEIGHT,
+            borderRadius: moderateScale(16),
+          }}
           accessibilityRole="button"
           accessibilityLabel="Start"
         >
-          <Text style={styles.startBtnText}>Start</Text>
-        </TouchableOpacity>
-      </View>
+          <ButtonText
+            color="$buttonText"
+            fontWeight="$medium"
+            sx={{
+              fontSize: moderateScale(18),
+            }}
+          >
+            Start
+          </ButtonText>
+        </Button>
+      </Box>
     </SafeAreaView>
   );
 }
@@ -59,62 +122,6 @@ export default function SigninScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f4f1f4',
-  },
-  contentWrapper: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: SIDE_MARGIN,
-    paddingBottom: verticalScale(250), // Restores vertical positioning
-  },
-  hero: {
-    width: '100%',
-    height: '100%',
-    maxWidth: 400,
-  },
-  overlay: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: '#f4f1f4',
-    paddingHorizontal: SIDE_MARGIN,
-    paddingTop: verticalScale(32),
-    alignItems: 'center',
-  },
-  textWrapper: {
-    marginBottom: verticalScale(32),
-    width: '100%',
-  },
-  title: {
-    fontSize: moderateScale(36),
-    ...headingLarge,
-    color: '#111',
-    letterSpacing: -0.4,
-    textAlign: 'center',
-  },
-  titleAccent: {
-    color: '#a6643c',
-  },
-  subtitle: {
-    fontSize: moderateScale(18),
-    ...bodyLarge,
-    color: '#4B5563',
-    marginTop: verticalScale(12),
-    textAlign: 'center',
-  },
-  startBtn: {
-    width: '100%',
-    backgroundColor: '#010103',
-    borderRadius: moderateScale(16),
-    height: BUTTON_HEIGHT,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  startBtnText: {
-    color: '#fff',
-    fontSize: moderateScale(18),
-    ...buttonText,
+    backgroundColor: '#fdfdfd',
   },
 }); 

@@ -1,9 +1,12 @@
 import React from 'react';
-import { TouchableOpacity, StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Plus } from 'phosphor-react-native';
-import { themeColors } from '@/styles/theme';
+import { Pressable } from '@gluestack-ui/themed';
+import { config } from '@/styles/gluestack-ui.config';
+
+const themeColors = (config as any).tokens.colors;
 
 export const FAB = () => {
   const insets = useSafeAreaInsets();
@@ -14,15 +17,14 @@ export const FAB = () => {
   };
 
   return (
-    <TouchableOpacity
+    <Pressable
       style={[styles.fab, { bottom: (insets.bottom || 16) + 26 }]}
-      activeOpacity={0.8}
       onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel="Open camera"
     >
       <Plus size={32} weight="bold" color={themeColors.fabIcon} />
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

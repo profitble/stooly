@@ -18,7 +18,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.maxta.poop',
-    buildNumber: '5',
+    buildNumber: '6',
     config: {
       usesNonExemptEncryption: false,
     },
@@ -68,6 +68,7 @@ const config: ExpoConfig = {
     eas: {
       projectId: "9fbde21a-d8f9-4afe-bb34-c7d05e7690ce"
     },
+    gluestackUIConfigPath: "./styles/gluestack-ui.config.ts",
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
     revenueCatApiKeyIos,

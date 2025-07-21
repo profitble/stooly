@@ -1,16 +1,18 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated, View } from 'react-native';
+import { Animated } from 'react-native';
+import { Box } from '@gluestack-ui/themed';
+import { config } from '@/styles/gluestack-ui.config';
+
+const themeColors = (config as any).tokens.colors;
 
 export default function OnboardingProgress({ step }: { step: number }) {
   const totalSteps = 7;
   const progress = Math.max(0, Math.min(1, step / totalSteps));
   
-  // Initialize with correct progress value instead of 0
   const animatedWidth = useRef(new Animated.Value(progress)).current;
   const previousStep = useRef(step);
 
   useEffect(() => {
-    // Only animate if the step has actually changed
     if (previousStep.current !== step) {
       Animated.timing(animatedWidth, {
         toValue: progress,
@@ -27,11 +29,11 @@ export default function OnboardingProgress({ step }: { step: number }) {
   });
 
   return (
-    <View
+    <Box
       style={{
         height: 5,
         borderRadius: 9999,
-        backgroundColor: '#F0F0F0',
+        backgroundColor: themeColors.ringInactive,
         overflow: 'hidden',
         flex: 1,
       }}
@@ -40,10 +42,10 @@ export default function OnboardingProgress({ step }: { step: number }) {
         style={{
           width: widthInterpolate,
           height: '100%',
-          backgroundColor: '#111',
+          backgroundColor: themeColors.primaryText,
           borderRadius: 9999,
         }}
       />
-    </View>
+    </Box>
   );
 }

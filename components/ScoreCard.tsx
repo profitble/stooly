@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Platform, LayoutChangeEvent } from 'react-native';
+import { StyleSheet, Platform, LayoutChangeEvent } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { themeColors } from '@/styles/theme';
+import { Box, Text } from '@gluestack-ui/themed';
+import { config } from '@/styles/gluestack-ui.config';
 
 interface GutHealthScoreCardProps {
   score: number | null;
 }
 
 const GRADIENT_COLORS = ['#3b82f6', '#22c55e', '#facc15', '#ef4444'];
+const themeColors = (config as any).tokens.colors;
 
 const getStatus = (score: number) => {
-  if (score < 25) return { text: 'Needs Attention', color: '#3b82f6' };
-  if (score < 50) return { text: 'Getting There', color: '#22c55e' };
-  if (score < 75) return { text: 'On Track', color: '#facc15' };
-  return { text: 'Optimal', color: '#ef4444' };
+  if (score < 25) return { text: 'Needs Attention', color: themeColors.iconBlue };
+  if (score < 50) return { text: 'Getting There', color: '#22c55e' }; // Note: direct color
+  if (score < 75) return { text: 'On Track', color: themeColors.iconOrange };
+  return { text: 'Optimal', color: themeColors.iconRed };
 };
 
 export const GutHealthScoreCard = ({ score }: GutHealthScoreCardProps) => {
@@ -21,9 +23,9 @@ export const GutHealthScoreCard = ({ score }: GutHealthScoreCardProps) => {
 
   if (score === null) {
     return (
-      <View style={[styles.container, styles.emptyState]}>
+      <Box style={[styles.container, styles.emptyState]}>
         <Text style={styles.emptyText}>Waiting for your first analysis of the week.</Text>
-      </View>
+      </Box>
     );
   }
 
@@ -37,27 +39,27 @@ export const GutHealthScoreCard = ({ score }: GutHealthScoreCardProps) => {
   const indicatorPosition = containerWidth * progress;
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <Box style={styles.container}>
+      <Box style={styles.header}>
         <Text style={styles.labelText}>
           Your gut health is{' '}
           <Text style={[styles.statusChip, { backgroundColor: status.color }]}>
             {status.text}
           </Text>
         </Text>
-      </View>
+      </Box>
       <Text style={styles.progressValue}>{score.toFixed(1)}</Text>
 
-      <View style={styles.meterContainer} onLayout={handleLayout}>
+      <Box style={styles.meterContainer} onLayout={handleLayout}>
         <LinearGradient
           colors={GRADIENT_COLORS as [string, string, string, string]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 0 }}
           style={styles.gradientBar}
         />
-        {containerWidth > 0 && <View style={[styles.indicator, { left: indicatorPosition }]} />}
-      </View>
-    </View>
+        {containerWidth > 0 && <Box style={[styles.indicator, { left: indicatorPosition }]} />}
+      </Box>
+    </Box>
   );
 };
 
@@ -127,6 +129,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 32,
+    backgroundColor: themeColors.emptyCardBackground,
   },
   emptyText: {
     fontSize: 16,

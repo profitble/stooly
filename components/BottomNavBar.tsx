@@ -5,11 +5,13 @@ import { useRouter } from 'expo-router';
 import Octicons from '@expo/vector-icons/Octicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { GearSix } from 'phosphor-react-native';
-import { themeColors } from '../styles/theme';
+import { config } from '../styles/gluestack-ui.config';
 
 interface BottomNavBarProps {
   activeScreen: 'home' | 'goals' | 'settings';
 }
+
+const themeColors = (config as any).tokens.colors;
 
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeScreen }) => {
   const insets = useSafeAreaInsets();

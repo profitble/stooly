@@ -1,12 +1,12 @@
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { BackHandler, View, ActivityIndicator } from 'react-native';
+import { BackHandler } from 'react-native';
 import { revenueCatService, ENTITLEMENT_ID } from '@/services/revenueCatService';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
+import { Box, Spinner } from '@gluestack-ui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { themeColors } from '@/styles/theme';
 
 export const unstable_settings = {
   initialRouteName: 'home',
@@ -33,14 +33,14 @@ function ProtectedRoutes() {
         if (isMounted) {
           setIsSubscribed(hasActiveSubscription);
           if (!hasActiveSubscription) {
-            router.replace('/6-paywall');
+            router.replace('/(public)/6-paywall');
             return;
           }
         }
       } catch (error) {
         if (isMounted) {
           setIsSubscribed(false);
-          router.replace('/6-paywall');
+          router.replace('/(public)/6-paywall');
         }
       } finally {
         if (isMounted) {
@@ -63,9 +63,9 @@ function ProtectedRoutes() {
 
   if (isLoading || isSubscribed === false) {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator color="#fff" />
-      </SafeAreaView>
+      <Box flex={1} backgroundColor="$background" justifyContent="center" alignItems="center">
+        <Spinner color="$primary" />
+      </Box>
     );
   }
 
@@ -74,7 +74,7 @@ function ProtectedRoutes() {
   }
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: themeColors.background }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: '#fdfdfd' }}>
       <Header />
       <Stack 
         screenOptions={{

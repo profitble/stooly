@@ -17,20 +17,12 @@ fi
 # Create development RevenueCat service that always returns active subscription
 echo "🚫 Disabling paywall for development..."
 cat > services/revenueCatService.ts << 'EOL'
-import Purchases, { 
-  LOG_LEVEL, 
-  CustomerInfo, 
-  PurchasesError,
-  PurchasesPackage,
-  PurchasesOfferings
-} from 'react-native-purchases';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { getOrCreateAppUserId } from '@/utils/userId';
+import { CustomerInfo, PurchasesOfferings } from 'react-native-purchases';
 
-// RevenueCat Configuration Constants
+// DEV: Mock implementation of RevenueCatService for development
+
 export const ENTITLEMENT_ID = 'stooly_unlimited';
 export const PACKAGE_ID = '$rc_weekly';
-export const OFFERING_ID = 'current';
 
 interface InitializationResult {
   success: boolean;
@@ -39,8 +31,7 @@ interface InitializationResult {
 
 class RevenueCatService {
   private static instance: RevenueCatService;
-  private isInitialized = false;
-  private appUserId: string | null = null;
+  private isInitialized = true; // Assume initialized
 
   private constructor() {}
 
@@ -52,18 +43,14 @@ class RevenueCatService {
   }
 
   async initialize(): Promise<InitializationResult> {
-    // DEV: Always return success, skip actual RevenueCat initialization
-    this.isInitialized = true;
     return { success: true };
   }
 
   async getOfferings(): Promise<PurchasesOfferings> {
-    // DEV: Return mock offerings
-    return { current: null } as PurchasesOfferings;
+    return { current: null } as unknown as PurchasesOfferings;
   }
 
   async getCustomerInfo(): Promise<CustomerInfo> {
-    // DEV: Always return active subscription
     const now = new Date().toISOString();
     const future = new Date(2099, 11, 31).toISOString();
     return {
@@ -96,17 +83,14 @@ class RevenueCatService {
   }
 
   async purchasePackage(packageIdentifier: string): Promise<CustomerInfo> {
-    // DEV: Always return active subscription
     return this.getCustomerInfo();
   }
 
   async restorePurchases(): Promise<CustomerInfo> {
-    // DEV: Always return active subscription
     return this.getCustomerInfo();
   }
 
   async isSubscribed(): Promise<boolean> {
-    // DEV: Always return true
     return true;
   }
 }

@@ -1,9 +1,15 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import { StyleSheet } from 'react-native';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import * as SplashScreen from 'expo-splash-screen';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import { themeColors } from '@/styles/theme';
+import {
+  Box,
+  Text,
+  Button,
+  ButtonText,
+} from '@gluestack-ui/themed';
+import { moderateScale } from '@/styles/sizing';
 
 function clearMemory() {
   // Force garbage collection through indirect means
@@ -19,32 +25,53 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetError
     void SplashScreen.hideAsync();
   }, []);
 
-  // Handle subscription-related errors differently
   const isSubscriptionError = error.message.includes('subscription') || 
                             error.message.includes('entitlement') ||
                             error.message.includes('RevenueCat');
 
   return (
-    <View style={styles.container}>
-      <FontAwesome5 name="exclamation-circle" size={48} color={themeColors.primary} style={styles.icon} />
-      <Text style={styles.title}>
+    <Box
+      flex={1}
+      backgroundColor="$background"
+      alignItems="center"
+      justifyContent="center"
+      padding={24}
+    >
+      <FontAwesome5 name="exclamation-circle" size={48} color="#a26235" style={{ marginBottom: 24 }} />
+      <Text
+        color="$primaryText"
+        fontWeight="$bold"
+        textAlign="center"
+        marginBottom={16}
+        sx={{ fontSize: moderateScale(24) }}
+      >
         {isSubscriptionError ? 'Subscription Issue' : 'Something Went Wrong'}
       </Text>
-      <Text style={styles.message}>
+      <Text
+        color="$secondaryText"
+        textAlign="center"
+        marginBottom={32}
+        sx={{ fontSize: moderateScale(16) }}
+      >
         {isSubscriptionError 
           ? 'Couldn\'t check your subscription. Try again.'
           : 'Please try again.'}
       </Text>
-      <Pressable
-        style={styles.button}
-        onPress={async () => {
+      <Button
+        backgroundColor="$primary"
+        borderRadius={9999}
+        paddingHorizontal={24}
+        paddingVertical={12}
+        onPress={() => {
           clearMemory();
           resetErrorBoundary();
         }}
       >
-        <Text style={styles.buttonText}>Try Again</Text>
-      </Pressable>
-    </View>
+        <ButtonText color="$fabIcon" sx={{ fontSize: moderateScale(16) }}>
+          Try Again
+        </ButtonText>
+      </Button>
+    </Box>
   );
 }
 
@@ -59,43 +86,4 @@ export function ErrorBoundary({ children }: { children: React.ReactNode }) {
       {children}
     </ReactErrorBoundary>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: themeColors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 24,
-  },
-  icon: {
-    marginBottom: 24,
-  },
-  title: {
-    fontSize: 24,
-    color: themeColors.primaryText,
-    marginBottom: 16,
-    fontFamily: 'SF-Pro',
-    fontWeight: 'bold',
-    textAlign: 'center',
-  },
-  message: {
-    fontSize: 16,
-    color: themeColors.secondaryText,
-    marginBottom: 32,
-    textAlign: 'center',
-    fontFamily: 'SF-Pro',
-  },
-  button: {
-    backgroundColor: themeColors.primary,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 9999,
-  },
-  buttonText: {
-    color: themeColors.fabIcon,
-    fontSize: 16,
-    fontFamily: 'SF-Pro',
-  },
-}); 
+} 

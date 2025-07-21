@@ -1,5 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Stack } from 'expo-router';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '../styles/gluestack-ui.config';
 import { Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
@@ -74,27 +76,29 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
-      <StatusBar style="dark" />
-      <Animated.View 
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: '#180b0b',
-          opacity: fadeAnim,
-          zIndex: 999,
-        }}
-        pointerEvents="none"
-      />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: '#180b0b' },
-          animation: 'none',
-        }}
-      />
+      <GluestackUIProvider config={config}>
+        <StatusBar style="dark" />
+        <Animated.View 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: '#180b0b',
+            opacity: fadeAnim,
+            zIndex: 999,
+          }}
+          pointerEvents="none"
+        />
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: '#180b0b' },
+            animation: 'none',
+          }}
+        />
+      </GluestackUIProvider>
     </ErrorBoundary>
   );
 }
