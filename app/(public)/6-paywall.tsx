@@ -8,6 +8,7 @@ import { revenueCatService, PACKAGE_ID, ENTITLEMENT_ID } from '@/services/revenu
 import { ArrowRight, CheckCircle, Lock } from 'phosphor-react-native';
 import { themeColors } from '@/styles/theme';
 import { PURCHASES_ERROR_CODE } from 'react-native-purchases';
+import { headingLarge, buttonText, bodySmall } from '@/styles/fonts';
 
 // Layout constants
 const { height } = Dimensions.get('window');
@@ -199,8 +200,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-    fontFamily: 'SFProDisplay-Bold',
-    fontWeight: '700',
+    ...headingLarge,
     textAlign: 'center',
     color: '#111',
     marginBottom: 12,
@@ -212,8 +212,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 26,
   },
   hero: {
-    width: 450,
-    height: 450,
+    width: 425,
+    height: 425,
   },
   overlay: {
     position: 'absolute',
@@ -297,27 +297,27 @@ const styles = StyleSheet.create({
   },
   trialButtonText: {
     fontSize: 20,
-    fontFamily: 'SFProDisplay-Bold',
+    ...buttonText,
     color: '#fff',
   },
   pricingText: {
     fontSize: 15,
-    color: '#6D6D6D', // match 2-gender.tsx usersText
+    color: '#6D6D6D',
     textAlign: 'center',
     lineHeight: 20,
     marginBottom: 30,
-    fontFamily: 'SFPRODISPLAY-Bold',
+    ...bodySmall,
   },
   restoreButton: {
     paddingVertical: 4,
   },
   restoreText: {
     fontSize: 15,
-    color: '#6D6D6D', // match 2-gender.tsx usersText
+    color: '#6D6D6D',
     textAlign: 'center',
     lineHeight: 20,
     textDecorationLine: 'underline',
-    fontFamily: 'SFPRODISPLAY-Bold',
+    ...buttonText,
   },
   linksContainer: {
     flexDirection: 'row',
@@ -327,8 +327,8 @@ const styles = StyleSheet.create({
   },
   linkText: {
     fontSize: 15,
-    color: '#6D6D6D', // match 2-gender.tsx usersText
+    color: '#6D6D6D',
     textDecorationLine: 'underline',
-    fontFamily: 'SFPRODISPLAY-Bold',
+    ...buttonText,
   },
 }); 

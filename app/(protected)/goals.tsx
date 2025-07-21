@@ -22,7 +22,7 @@ import {
   processGoalReplacementQueue,
   type Goal,
 } from '../../services/goalService';
-import { GutHealthScoreCard } from '@/components/scoreCard';
+import { GutHealthScoreCard } from '@/components/ScoreCard';
 
 const POOP_LOGS_KEY = 'poop_logs';
 

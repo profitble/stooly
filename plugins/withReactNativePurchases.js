@@ -4,7 +4,7 @@ const withReactNativePurchases = (config) => {
   // Handle iOS configuration
   config = withInfoPlist(config, (config) => {
     // Add RevenueCat API key
-    config.modResults.RCAppStoreAPIKey = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
+    config.modResults.RCAppStoreAPIKey = config.extra.revenueCatApiKeyIos;
     
     // Add essential iOS capabilities for RevenueCat
     config.modResults.SKPaymentTransactions = true;

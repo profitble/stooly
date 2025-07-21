@@ -11,6 +11,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
+import { headingLarge, buttonText, bodySmall } from '@/styles/fonts';
 
 const SIDE_MARGIN = 26;
 const BUTTON_HEIGHT = 60;
@@ -133,7 +134,7 @@ const styles = StyleSheet.create({
   },
   progressBarBg: { flex: 1, height: 2, backgroundColor: '#E7E7E7', borderRadius: 1, overflow: 'hidden' },
   progressBarFill: { width: '20%', height: '100%', backgroundColor: '#111' },
-  title: { fontSize: 36, fontWeight: '700', letterSpacing: -0.2, color: '#111', marginBottom: 12, fontFamily: 'SFProDisplay-Bold' },
+  title: { fontSize: 36, ...headingLarge, letterSpacing: -0.2, color: '#111', marginBottom: 12 },
   subtitle: { fontSize: 18, color: '#111', marginBottom: 24 },
   starsWrapper: {
     borderWidth: 2,
@@ -184,7 +185,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 4 },
   },
-  nextText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', color: '#fff', fontWeight: '600' },
+  nextText: { fontSize: 18, ...buttonText, color: '#fff' },
   genderContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -201,6 +202,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 22,
   },
-  genderText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', fontWeight: '600' },
-  optionDesc: { fontSize: 16, fontFamily: 'SFProDisplay-Medium', marginTop: 4, fontWeight: '600' },
+  genderText: { fontSize: 18, ...buttonText },
+  optionDesc: { fontSize: 16, ...bodySmall, marginTop: 4 },
 });

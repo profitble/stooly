@@ -14,6 +14,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
 import { themeColors } from '@/styles/theme';
+import { headingLarge, headingMedium, buttonText } from '@/styles/fonts';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore – library lacks bundled TypeScript declarations
 import WheelPickerExpo from 'react-native-wheel-picker-expo';
@@ -305,11 +306,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
-    fontWeight: '700',
+    ...headingLarge,
     letterSpacing: -0.2,
     color: '#111',
     marginBottom: 12,
-    fontFamily: 'SFProDisplay-Bold',
   },
   subtitle: {
     fontSize: 18,
@@ -330,7 +330,7 @@ const styles = StyleSheet.create({
     width: 160,
     textAlign: 'center',
     fontSize: 22,
-    fontWeight: '700',
+    ...headingMedium,
   },
   unitActive: { color: '#090909' },
   unitInactive: { color: '#d5d5d7' },
@@ -354,7 +354,7 @@ const styles = StyleSheet.create({
   pickerHeading: {
     fontSize: 18,
     color: '#111',
-    fontWeight: '600',
+    ...headingMedium,
     textAlign: 'center',
   },
   footer: {
@@ -382,8 +382,7 @@ const styles = StyleSheet.create({
   },
   nextText: {
     fontSize: 18,
-    fontFamily: 'SFProDisplay-Medium',
+    ...buttonText,
     color: '#fff',
-    fontWeight: '600',
   },
 }); 

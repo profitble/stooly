@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { headingLarge, bodyLarge, buttonText } from '@/styles/fonts';
 
 const SIDE_MARGIN = 26;
 const BUTTON_HEIGHT = 60;
@@ -63,9 +64,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f4f1f4',
+    justifyContent: 'space-between',
   },
   contentWrapper: {
-    flex: 1,
     alignItems: 'center',
     justifyContent: 'flex-start',
     width: '100%',
@@ -90,10 +91,9 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 36,
-    fontWeight: '700',
+    ...headingLarge,
     color: '#111',
     letterSpacing: -0.4,
-    fontFamily: 'SFProDisplay-Bold',
     textAlign: 'center',
   },
   titleAccent: {
@@ -101,9 +101,9 @@ const styles = StyleSheet.create({
   },
   subtitle: {
     fontSize: 18,
+    ...bodyLarge,
     color: '#4B5563',
     marginTop: 12,
-    fontFamily: 'SFProDisplay-Medium',
     textAlign: 'center',
   },
   startBtn: {
@@ -117,8 +117,7 @@ const styles = StyleSheet.create({
   startBtnText: {
     color: '#fff',
     fontSize: 18,
-    fontFamily: 'SFProDisplay-Medium',
-    fontWeight: '600',
+    ...buttonText,
   },
   footerWrapper: {
     width: '100%',

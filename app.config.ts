@@ -1,13 +1,6 @@
 import type { ExpoConfig } from 'expo/config';
-import { z } from 'zod';
 
-const configEnvSchema = z.object({
-  EXPO_PUBLIC_API_BASE_URL: z.string().url().optional(),
-  EXPO_PUBLIC_SUPABASE_ANON_KEY: z.string().min(1).optional(),
-  EXPO_PUBLIC_REVENUECAT_API_KEY_IOS: z.string().min(1).optional(),
-}).optional();
-
-const env = configEnvSchema.parse(process.env);
+const revenueCatApiKeyIos = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
 
 const config: ExpoConfig = {
   name: "Stooly",
@@ -25,7 +18,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.maxta.poop',
-    buildNumber: '2',
+    buildNumber: '3',
     config: {
       usesNonExemptEncryption: false,
     },
@@ -77,7 +70,7 @@ const config: ExpoConfig = {
     },
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
-    revenueCatApiKeyIos: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
+    revenueCatApiKeyIos,
   },
   owner: "maxta"
 };

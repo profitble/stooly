@@ -13,6 +13,7 @@ import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
 import Octicons from '@expo/vector-icons/Octicons';
 import { CirclesThree, DotsSixVertical } from 'phosphor-react-native';
+import { headingLarge, headingMedium, bodySmall, buttonText } from '@/styles/fonts';
 
 const SIDE_MARGIN = 26;
 const BUTTON_HEIGHT = 60;
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
   },
   progressBarBg: { flex: 1, height: 2, backgroundColor: '#E7E7E7', borderRadius: 1, overflow: 'hidden' },
   progressBarFill: { width: '20%', height: '100%', backgroundColor: '#111' },
-  title: { fontSize: 31.5, fontWeight: '700', letterSpacing: -0.2, color: '#111', marginBottom: 12, fontFamily: 'SFProDisplay-Bold' },
+  title: { fontSize: 31.5, ...headingLarge, letterSpacing: -0.2, color: '#111', marginBottom: 12 },
   subtitle: { fontSize: 18, color: '#111', marginBottom: 24 },
   starsWrapper: {
     borderWidth: 2,
@@ -202,7 +203,7 @@ const styles = StyleSheet.create({
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 4 },
   },
-  nextText: { fontSize: 18, fontFamily: 'SFProDisplay-Medium', color: '#fff', fontWeight: '600' },
+  nextText: { fontSize: 18, ...buttonText, color: '#fff' },
   optionContainer: {
     flex: 1,
     justifyContent: 'flex-start',
@@ -226,6 +227,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  optionTitle: { fontSize: 15, fontFamily: 'SFProDisplay-Bold', fontWeight: '600' },
-  optionDesc: { fontSize: 12, fontFamily: 'SFProDisplay-Medium', marginTop: 4, fontWeight: '600' },
+  optionTitle: { fontSize: 15, ...headingMedium },
+  optionDesc: { fontSize: 12, ...bodySmall, marginTop: 4 },
 }); 

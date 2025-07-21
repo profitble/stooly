@@ -15,30 +15,12 @@ export default function PublicLayout() {
       }}
     >
       <Stack.Screen
-        name="about"
+        name="1-start"
         options={{
           animation: 'none',
           gestureEnabled: false,
         }}
       />
-      <Stack.Screen
-        name="onboard"
-        options={{
-          animation: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="review"
-        options={{
-          animation: 'slide_from_right',
-        }}
-      />
-      <Stack.Screen
-        name="paywall"
-        options={{
-          animation: 'slide_from_right'
-        }}
-      />
     </Stack>
   );
-} 
+}
