@@ -1,5 +1,4 @@
 import Purchases, { 
-  LOG_LEVEL, 
   CustomerInfo, 
   PurchasesError,
   PurchasesPackage,
@@ -7,6 +6,7 @@ import Purchases, {
 } from 'react-native-purchases';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getOrCreateAppUserId } from '@/utils/userId';
+import { Platform } from 'react-native';
 
 const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
@@ -47,9 +47,13 @@ class RevenueCatService {
 
     for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
       try {
-        const apiKey = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
+        const apiKey = Platform.select({
+          ios: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
+          default: null,
+        });
+
         if (!apiKey) {
-          throw new Error('RevenueCat API key not configured');
+          throw new Error('RevenueCat API key not configured for this platform');
         }
 
         await Purchases.configure({ apiKey });
@@ -111,7 +115,7 @@ class RevenueCatService {
       }
     }
 
-    return Purchases.getCustomerInfo({ forceRefresh: true });
+    return Purchases.getCustomerInfo();
   }
 
   async purchasePackage(packageIdentifier: string): Promise<CustomerInfo> {

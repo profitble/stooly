@@ -109,7 +109,7 @@ export default function ReviewScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f1f4' },
+  container: { flex: 1, backgroundColor: '#fdfdfd' },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',

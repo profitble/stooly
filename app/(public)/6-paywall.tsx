@@ -1,31 +1,21 @@
-import { StyleSheet, Image, Dimensions, Alert, BackHandler, Pressable, Platform, SafeAreaView, ActivityIndicator } from 'react-native';
+import { StyleSheet, Image, Alert, Pressable, Platform, SafeAreaView, ActivityIndicator } from 'react-native';
 import { Text, Button, ButtonText, HStack, View, VStack } from '@gluestack-ui/themed';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import { useRouter } from 'expo-router';
 import { useState, useEffect } from 'react';
 import type { PurchasesOffering } from 'react-native-purchases';
 import { revenueCatService, PACKAGE_ID, ENTITLEMENT_ID } from '@/services/revenueCatService';
-import { ArrowRight, CheckCircle, Lock } from 'phosphor-react-native';
-import { themeColors } from '@/styles/theme';
 import { PURCHASES_ERROR_CODE } from 'react-native-purchases';
 import { headingLarge, buttonText, bodySmall } from '@/styles/fonts';
 
 // Layout constants
-const { height } = Dimensions.get('window');
-const IMAGE_HEIGHT = Math.min(height * 0.65, 450);
 const BUTTON_HEIGHT = 56;
 const MINIMUM_BOTTOM_PADDING = 34;
 
-const isIPad = Platform.OS === 'ios' && Platform.isPad;
-
 export default function PaywallScreen() {
   const router = useRouter();
-  const { transition } = useLocalSearchParams<{ transition?: string }>();
-  const [offering, setOffering] = useState<PurchasesOffering | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [isPurchasing, setIsPurchasing] = useState(false);
   const insets = useSafeAreaInsets();
-  const [isRestoring, setIsRestoring] = useState(false);
 
   useEffect(() => {
     void setupPurchases();
@@ -48,7 +38,6 @@ export default function PaywallScreen() {
         throw new Error('No subscription options available');
       }
 
-      setOffering(offerings.current);
     } catch (error) {
       let errorMessage = 'Setting up subscriptions. Please try again soon.';
       
@@ -174,7 +163,7 @@ export default function PaywallScreen() {
               <Text 
                 style={styles.pricingText}
               >
-                Renews at $6.99 per week
+                Renews at $6.99 per week.
               </Text>
             </VStack>
           </View>
@@ -241,52 +230,6 @@ const styles = StyleSheet.create({
   bottomContent: {
     paddingTop: 16,
   },
-  verse: {
-    fontSize: 14,
-    color: '#111', // match 2-gender.tsx title
-    marginBottom: 8,
-    textAlign: 'center',
-    lineHeight: 22,
-    opacity: 0.8,
-  },
-  greeting: {
-    fontSize: 22,
-    color: '#111', // match 2-gender.tsx title
-    marginBottom: 8,
-    lineHeight: 28,
-    fontFamily: 'Merriweather-Italic',
-  },
-  message: {
-    fontSize: 13,
-    color: '#111', // match 2-gender.tsx subtitle
-    marginBottom: 8,
-    lineHeight: 18,
-  },
-  benefitsText: {
-    fontSize: 13,
-    color: '#111', // match 2-gender.tsx subtitle
-    marginBottom: 8,
-    lineHeight: 18,
-  },
-  notificationContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    backgroundColor: '#f4f1f4', // match 2-gender.tsx
-    padding: 12,
-    borderRadius: 12,
-    marginVertical: 12,
-    borderWidth: 1,
-    borderColor: '#ede9f1', // match 2-gender.tsx backBtn
-    width: '100%',
-  },
-  notificationText: {
-    fontSize: 13,
-    color: '#111', // match 2-gender.tsx subtitle
-    flex: 1,
-    marginRight: 12,
-    lineHeight: 18,
-  },
   trialButton: {
     backgroundColor: '#010103',
     height: BUTTON_HEIGHT,
@@ -298,10 +241,11 @@ const styles = StyleSheet.create({
   trialButtonText: {
     fontSize: 20,
     ...buttonText,
+    fontWeight: '700',
     color: '#fff',
   },
   pricingText: {
-    fontSize: 15,
+    fontSize: 14,
     color: '#6D6D6D',
     textAlign: 'center',
     lineHeight: 20,

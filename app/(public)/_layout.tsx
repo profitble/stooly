@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 
 export const unstable_settings = {
-  initialRouteName: 'about',
+  initialRouteName: '1-start',
 };
 
 export default function PublicLayout() {
@@ -9,7 +9,7 @@ export default function PublicLayout() {
     <Stack
       screenOptions={{
         headerShown: false,
-        contentStyle: { backgroundColor: '#fbf7f4' },
+        contentStyle: { backgroundColor: '#fdfdfd' },
         animation: 'slide_from_right',
         animationDuration: 1000,
       }}

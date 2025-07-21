@@ -36,7 +36,7 @@ export default function ReviewScreen() {
               width: 36,
               height: 36,
               borderRadius: 18,
-              backgroundColor: '#E5E5E5',
+              backgroundColor: '#fdfdfd',
               justifyContent: 'center',
               alignItems: 'center',
             },
@@ -95,7 +95,7 @@ export default function ReviewScreen() {
               key={opt.value}
               style={[
                 styles.optionCard,
-                { backgroundColor: selected ? '#010103' : '#ffffff' },
+                { backgroundColor: selected ? '#010103' : '#fff' },
               ]}
               onPress={() => setWaterIntake(opt.value)}
               accessibilityRole="button"
@@ -134,7 +134,7 @@ export default function ReviewScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f1f4' },
+  container: { flex: 1, backgroundColor: '#fdfdfd' },
   headerRow: {
     flexDirection: 'row',
     alignItems: 'center',

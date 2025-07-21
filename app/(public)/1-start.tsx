@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-// Sign-in welcome screen – "Welcome to Balloon" with Apple & Email buttons
-
 import React from 'react';
 import {
   View,
@@ -9,14 +6,14 @@ import {
   SafeAreaView,
   TouchableOpacity,
   Image,
-  Platform,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { headingLarge, bodyLarge, buttonText } from '@/styles/fonts';
+import { horizontalScale, verticalScale, moderateScale } from '@/styles/sizing';
 
-const SIDE_MARGIN = 26;
-const BUTTON_HEIGHT = 60;
+const SIDE_MARGIN = horizontalScale(26);
+const BUTTON_HEIGHT = verticalScale(60);
 
 export default function SigninScreen() {
   const router = useRouter();
@@ -29,24 +26,23 @@ export default function SigninScreen() {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.contentWrapper}>
-        {/* Logo / hero illustration */}
-        <View style={styles.heroWrapper}>
-          <Image
-            source={require('@/assets/images/cover.png')}
-            style={styles.hero}
-          />
-        </View>
+        <Image
+          source={require('@/assets/images/cover.png')}
+          style={styles.hero}
+          resizeMode="contain"
+        />
+      </View>
 
-        {/* Title & subtitle */}
+      <View style={[styles.overlay, { paddingBottom: insets.bottom > 0 ? insets.bottom + 50 : 170 }]}>
         <View style={styles.textWrapper}>
           <Text style={styles.title}>
             Welcome to <Text style={styles.titleAccent}>Stooly</Text>
           </Text>
-          <Text style={styles.subtitle}>Build Habits Towards Better Gut Health</Text>
+          <Text style={styles.subtitle}>
+            Build Habits Towards Better Gut Health
+          </Text>
         </View>
-      </View>
 
-      <View style={[styles.footerWrapper, { paddingBottom: insets.bottom > 0 ? insets.bottom : 24 }]}>
         <TouchableOpacity
           style={styles.startBtn}
           onPress={handleContinue}
@@ -64,33 +60,35 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f4f1f4',
-    justifyContent: 'space-between',
   },
   contentWrapper: {
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    width: '100%',
-  },
-  heroWrapper: {
-    marginTop: 60,
-    marginBottom: 36,
-    width: '100%',
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: SIDE_MARGIN,
+    paddingBottom: verticalScale(250), // Restores vertical positioning
   },
   hero: {
     width: '100%',
-    height: 450,
+    height: '100%',
     maxWidth: 400,
-    resizeMode: 'contain',
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#f4f1f4',
+    paddingHorizontal: SIDE_MARGIN,
+    paddingTop: verticalScale(32),
+    alignItems: 'center',
   },
   textWrapper: {
-    paddingHorizontal: SIDE_MARGIN,
-    marginBottom: 32,
+    marginBottom: verticalScale(32),
     width: '100%',
   },
   title: {
-    fontSize: 36,
+    fontSize: moderateScale(36),
     ...headingLarge,
     color: '#111',
     letterSpacing: -0.4,
@@ -100,28 +98,23 @@ const styles = StyleSheet.create({
     color: '#a6643c',
   },
   subtitle: {
-    fontSize: 18,
+    fontSize: moderateScale(18),
     ...bodyLarge,
     color: '#4B5563',
-    marginTop: 12,
+    marginTop: verticalScale(12),
     textAlign: 'center',
   },
   startBtn: {
     width: '100%',
     backgroundColor: '#010103',
-    borderRadius: 16,
+    borderRadius: moderateScale(16),
     height: BUTTON_HEIGHT,
     justifyContent: 'center',
     alignItems: 'center',
   },
   startBtnText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: moderateScale(18),
     ...buttonText,
-  },
-  footerWrapper: {
-    width: '100%',
-    paddingHorizontal: SIDE_MARGIN,
-    marginBottom: 20,
   },
 }); 
