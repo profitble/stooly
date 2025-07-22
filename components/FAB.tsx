@@ -1,12 +1,12 @@
 import React from 'react';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, Pressable as RNPressable } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { Plus } from 'phosphor-react-native';
-import { Pressable } from '@gluestack-ui/themed';
-import { config } from '@/styles/gluestack-ui.config';
 
-const themeColors = (config as any).tokens.colors;
+const Pressable = RNPressable as any;
+const FAB_BG = '#a26235';
+const FAB_ICON = '#fff';
 
 export const FAB = () => {
   const insets = useSafeAreaInsets();
@@ -18,34 +18,25 @@ export const FAB = () => {
 
   return (
     <Pressable
-      style={[styles.fab, { bottom: (insets.bottom || 16) + 26 }]}
+      className="absolute right-[26px] w-[62px] h-[62px] rounded-full items-center justify-center"
+      style={{
+        backgroundColor: FAB_BG,
+        bottom: (insets.bottom || 16) + 26,
+        ...Platform.select({
+          ios: {
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 4 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+          },
+          android: { elevation: 6 },
+        }),
+      }}
       onPress={handlePress}
       accessibilityRole="button"
       accessibilityLabel="Open camera"
     >
-      <Plus size={32} weight="bold" color={themeColors.fabIcon} />
+      <Plus size={32} weight="bold" color={FAB_ICON} />
     </Pressable>
   );
-};
-
-const styles = StyleSheet.create({
-  fab: {
-    position: 'absolute',
-    right: 26,
-    width: 62,
-    height: 62,
-    borderRadius: 31,
-    backgroundColor: themeColors.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    elevation: 6,
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.1,
-        shadowRadius: 8,
-      },
-    }),
-  },
-}); 
+}; 

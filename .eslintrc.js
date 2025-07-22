@@ -8,10 +8,6 @@ module.exports = {
   ],
   plugins: ['@typescript-eslint', 'react-hooks'],
   parser: '@typescript-eslint/parser',
-  env: {
-    node: true,
-    'react-native/react-native': true
-  },
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',

@@ -1,19 +1,16 @@
 import React, { useMemo, useState } from 'react';
 import { Picker } from '@react-native-picker/picker';
-import { StyleSheet, SafeAreaView, Switch } from 'react-native';
+import {
+  SafeAreaView,
+  View,
+  Text,
+  Pressable,
+  Switch,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
-import {
-  Box,
-  Text,
-  Pressable,
-  Button,
-  ButtonText,
-} from '@gluestack-ui/themed';
-import { moderateScale } from '@/styles/sizing';
-
 // Constants
 const SIDE_MARGIN = 26;
 const BUTTON_HEIGHT = 60;
@@ -22,10 +19,11 @@ const METRIC_HEIGHT_MAX = 200; // cm
 const METRIC_WEIGHT_MIN = 40; // kg
 const METRIC_WEIGHT_MAX = 150; // kg
 
-const IMP_HEIGHT_MIN_IN = 54; // 4'6" in inches
-const IMP_HEIGHT_MAX_IN = 78; // 6'6"
+const IMP_HEIGHT_MIN_IN = 48; // 4'0" in inches
+const IMP_HEIGHT_MAX_IN = 96; // 8'0" in inches
 const IMP_WEIGHT_MIN_LB = 90;
 const IMP_WEIGHT_MAX_LB = 330;
+
 // Helpers to generate picker data
 const generateMetricHeight = () =>
   Array.from({ length: METRIC_HEIGHT_MAX - METRIC_HEIGHT_MIN + 1 }).map((_, i) => {
@@ -49,12 +47,11 @@ const generateImperialHeight = () => {
   return arr;
 };
 
-const generateImperialWeight = () => {
-  return Array.from({ length: IMP_WEIGHT_MAX_LB - IMP_WEIGHT_MIN_LB + 1 }).map((_, i) => {
+const generateImperialWeight = () =>
+  Array.from({ length: IMP_WEIGHT_MAX_LB - IMP_WEIGHT_MIN_LB + 1 }).map((_, i) => {
     const val = IMP_WEIGHT_MIN_LB + i;
     return { label: `${val} lb`, value: String(val) };
   });
-};
 
 export default function HeightWeightScreen() {
   const router = useRouter();
@@ -72,108 +69,65 @@ export default function HeightWeightScreen() {
   const heightItems = metric ? metricHeights : imperialHeights;
   const weightItems = metric ? metricWeights : imperialWeights;
 
-  const handleNext = () => {
-    router.push('/(public)/5-water');
-  };
+  const handleNext = () => router.push('/(public)/5-water');
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-[#f3f4f6]">
       {/* Header */}
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        paddingHorizontal={SIDE_MARGIN}
-        marginBottom={12}
-      >
+      <View className="flex-row items-center px-[26px] mb-3">
         <Pressable
-          width={36}
-          height={36}
-          borderRadius={18}
-          backgroundColor="#E5E5E5"
-          justifyContent="center"
-          alignItems="center"
-          marginRight={16}
           onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          className="w-9 h-9 rounded-full bg-[#E5E5E5] justify-center items-center mr-4"
         >
           <ArrowLeft size={20} strokeWidth={1.5} color="#111" />
         </Pressable>
-        <Box
-          flex={1}
-          height={5}
-          backgroundColor="#F0F0F0"
-          borderRadius={9999}
-          overflow="hidden"
-        >
+        <View className="flex-1 h-[5px] bg-[#F0F0F0] rounded-full overflow-hidden">
           <OnboardingProgress step={4} />
-        </Box>
-      </Box>
+        </View>
+      </View>
 
       {/* Title & subtitle */}
-      <Box paddingHorizontal={SIDE_MARGIN}>
-        <Text
-          fontWeight="$bold"
-          color="$primaryText"
-          marginBottom={12}
-          sx={{ fontSize: moderateScale(32), letterSpacing: -0.2 }}
-        >
-          Height & weight
-        </Text>
-        <Text color="$primaryText" marginBottom={24} sx={{ fontSize: moderateScale(18) }}>
-          This will be used to calibrate your{"\n"}custom plan.
-        </Text>
-      </Box>
+      <View className="px-[26px]">
+        <Text className="text-[32px] font-bold text-[#111] mb-3">Height & weight</Text>
+        <Text className="text-[18px] text-[#111] mb-6">This will be used to calibrate your{"\n"}custom plan.</Text>
+      </View>
 
       {/* Unit switch */}
-      <Box
-        width={320}
-        alignSelf="center"
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="center"
-        position="relative"
-        marginTop={60}
-        marginBottom={24}
-      >
-        <Text
-          width={160}
-          textAlign="center"
-          fontWeight="$medium"
-          color={!metric ? '$primaryText' : '#d5d5d7'}
-          sx={{ fontSize: moderateScale(22), transform: [{ translateX: -15 }] }}
-        >
-          Imperial
-        </Text>
-        <Box
-          position="absolute"
-          left="50%"
-          width={160}
-          alignItems="center"
-          sx={{ marginLeft: -80 }}
-        >
+      <View className="w-[320px] self-center flex-row justify-between items-center mt-[60px] mb-6 relative">
+        <View className="absolute left-1/2 w-[160px] items-center ml-[-80px]">
           <Switch
             value={metric}
             onValueChange={() => {
               setMetric(prev => {
                 const next = !prev;
                 if (next) {
+                  // Imperial → Metric conversion
                   const inches = parseInt(heightValue, 10);
                   let cm = Math.round(inches * 2.54);
                   cm = Math.round(cm / 10) * 10;
                   cm = Math.max(METRIC_HEIGHT_MIN, Math.min(METRIC_HEIGHT_MAX, cm));
+
                   const lbs = parseInt(weightValue, 10);
                   let kg = Math.round(lbs / 2.20462);
                   kg = Math.round(kg / 10) * 10;
                   kg = Math.max(METRIC_WEIGHT_MIN, Math.min(METRIC_WEIGHT_MAX, kg));
+
                   setHeightValue(String(cm));
                   setWeightValue(String(kg));
                 } else {
+                  // Metric → Imperial conversion
                   const cm = parseInt(heightValue, 10);
                   let inches = Math.round(cm / 2.54);
                   inches = Math.max(IMP_HEIGHT_MIN_IN, Math.min(IMP_HEIGHT_MAX_IN, inches));
+
                   const kg = parseInt(weightValue, 10);
                   let lbs = Math.round(kg * 2.20462);
                   lbs = Math.round(lbs / 10) * 10;
                   lbs = Math.max(IMP_WEIGHT_MIN_LB, Math.min(IMP_WEIGHT_MAX_LB, lbs));
+
                   setHeightValue(String(inches));
                   setWeightValue(String(lbs));
                 }
@@ -184,124 +138,56 @@ export default function HeightWeightScreen() {
             thumbColor="#ffffff"
             ios_backgroundColor="#090909"
           />
-        </Box>
-        <Text
-          width={160}
-          textAlign="center"
-          fontWeight="$medium"
-          color={metric ? '$primaryText' : '#d5d5d7'}
-          sx={{ fontSize: moderateScale(22), transform: [{ translateX: 15 }] }}
-        >
-          Metric
-        </Text>
-      </Box>
+        </View>
+        <Text style={{ color: !metric ? '#111' : '#d5d5d7', transform: [{ translateX: -15 }], width:160, textAlign:'center', fontSize:22, fontWeight:'500' }}>Imperial</Text>
+        <Text style={{ color: metric ? '#111' : '#d5d5d7', transform: [{ translateX: 15 }], width:160, textAlign:'center', fontSize:22, fontWeight:'500' }}>Metric</Text>
+      </View>
 
       {/* Pickers */}
-      <Box flexDirection="row" justifyContent="space-evenly" flex={1}>
-        <Box alignItems="center">
-          <Text
-            fontWeight="$medium"
-            color="$primaryText"
-            textAlign="center"
-            marginBottom={4}
-            sx={{ fontSize: moderateScale(18) }}
-          >
-            Height
-          </Text>
-          <Box width={160} height={165} justifyContent="center">
-            <Box
-              pointerEvents="none"
-              position="absolute"
-              left={0}
-              right={0}
-              top="50%"
-              height={34}
-              marginTop={-17}
-              backgroundColor="#f7f4f8"
-              borderRadius={10}
-            />
+      <View className="flex-1 flex-row justify-evenly">
+        {/* Height */}
+        <View className="items-center">
+          <Text className="text-[18px] font-medium text-[#111] mb-1">Height</Text>
+          <View className="w-[160px] h-[165px] justify-center relative">
+            <View className="absolute left-0 right-0 top-1/2 h-[34px] -mt-[17px] bg-[#f7f4f8] rounded-[10px]" />
             <Picker
               selectedValue={heightValue}
               onValueChange={setHeightValue}
-              style={{ width: 160, height: 165 }}
-              itemStyle={{ fontSize: 16, fontWeight: '400', color: '#111' }}
+              style={{ width:160, height:165 }}
+              itemStyle={{ fontSize:16, fontWeight:'400', color:'#111' }}
             >
-              {heightItems.map((item) => (
-                <Picker.Item key={item.value} label={item.label} value={item.value} />
-              ))}
+              {heightItems.map(item => <Picker.Item key={item.value} label={item.label} value={item.value} />)}
             </Picker>
-          </Box>
-        </Box>
-        <Box alignItems="center">
-          <Text
-            fontWeight="$medium"
-            color="$primaryText"
-            textAlign="center"
-            marginBottom={4}
-            sx={{ fontSize: moderateScale(18) }}
-          >
-            Weight
-          </Text>
-          <Box width={160} height={165} justifyContent="center">
-            <Box
-              pointerEvents="none"
-              position="absolute"
-              left={0}
-              right={0}
-              top="50%"
-              height={34}
-              marginTop={-17}
-              backgroundColor="#f7f4f8"
-              borderRadius={10}
-            />
+          </View>
+        </View>
+        {/* Weight */}
+        <View className="items-center">
+          <Text className="text-[18px] font-medium text-[#111] mb-1">Weight</Text>
+          <View className="w-[160px] h-[165px] justify-center relative">
+            <View className="absolute left-0 right-0 top-1/2 h-[34px] -mt-[17px] bg-[#f7f4f8] rounded-[10px]" />
             <Picker
               selectedValue={weightValue}
               onValueChange={setWeightValue}
-              style={{ width: 160, height: 165 }}
-              itemStyle={{ fontSize: 16, fontWeight: '400', color: '#111' }}
+              style={{ width:160, height:165 }}
+              itemStyle={{ fontSize:16, fontWeight:'400', color:'#111' }}
             >
-              {weightItems.map((item) => (
-                <Picker.Item key={item.value} label={item.label} value={item.value} />
-              ))}
+              {weightItems.map(item => <Picker.Item key={item.value} label={item.label} value={item.value} />)}
             </Picker>
-          </Box>
-        </Box>
-      </Box>
+          </View>
+        </View>
+      </View>
 
       {/* Footer */}
-      <Box
-        position="absolute"
-        left={0}
-        right={0}
-        bottom={0}
-        backgroundColor="$background"
-        borderTopWidth={StyleSheet.hairlineWidth}
-        borderColor="rgba(229,231,235,0.4)"
-        sx={{
-          paddingHorizontal: SIDE_MARGIN,
-          paddingTop: 20,
-          paddingBottom: insets.bottom + 8,
-        }}
-      >
-        <Button
-          width="100%"
-          height={BUTTON_HEIGHT}
-          borderRadius={BUTTON_HEIGHT / 2}
-          backgroundColor="#010103"
-          justifyContent="center"
-          alignItems="center"
+      <View className="absolute left-0 right-0 bottom-0 bg-[#fdfdfd] border-t border-[#E5E7EB]/40 px-[26px] pt-5" style={{ paddingBottom: insets.bottom + 8 }}>
+        <Pressable
           onPress={handleNext}
+          className="w-full h-[60px] rounded-full bg-black justify-center items-center"
+          accessibilityRole="button"
+          accessibilityLabel="Next"
         >
-          <ButtonText color="$white" fontWeight="$medium" sx={{ fontSize: moderateScale(18) }}>
-            Next
-          </ButtonText>
-        </Button>
-      </Box>
+          <Text className="text-white font-medium text-xl">Next</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
-}
-
-// Styles
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f3f4f6' },
-}); 
+} 

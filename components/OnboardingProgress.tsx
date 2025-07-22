@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-import { Animated } from 'react-native';
-import { Box } from '@gluestack-ui/themed';
-import { config } from '@/styles/gluestack-ui.config';
+import { Animated, View as RNView } from 'react-native';
 
-const themeColors = (config as any).tokens.colors;
+const View = RNView as any;
+const RING_INACTIVE = '#E5E7EB';
+const PRIMARY = '#111';
 
 export default function OnboardingProgress({ step }: { step: number }) {
   const totalSteps = 7;
@@ -29,23 +29,15 @@ export default function OnboardingProgress({ step }: { step: number }) {
   });
 
   return (
-    <Box
-      style={{
-        height: 5,
-        borderRadius: 9999,
-        backgroundColor: themeColors.ringInactive,
-        overflow: 'hidden',
-        flex: 1,
-      }}
-    >
+    <View className="h-[5px] flex-1 rounded-full overflow-hidden" style={{ backgroundColor: RING_INACTIVE }}>
       <Animated.View
         style={{
           width: widthInterpolate,
           height: '100%',
-          backgroundColor: themeColors.primaryText,
+          backgroundColor: PRIMARY,
           borderRadius: 9999,
         }}
       />
-    </Box>
+    </View>
   );
 }

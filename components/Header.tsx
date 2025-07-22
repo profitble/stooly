@@ -1,31 +1,17 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
-import { Box, Image } from '@gluestack-ui/themed';
+import { View, Image } from 'react-native';
+
+const V = View as any;
+const Img = Image as any;
 
 export function Header() {
   return (
-    <Box style={styles.header}>
-      <Image
+    <V className="flex-row justify-between items-center px-4 py-3">
+      <Img
         source={require('@/assets/images/logo.png')}
-        style={styles.logo}
         resizeMode="contain"
-        alt="Stooly Logo"
+        className="w-[170px] h-[48px] mt-2"
       />
-    </Box>
+    </V>
   );
-}
-
-const styles = StyleSheet.create({
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 14,
-  },
-  logo: {
-    width: 170,
-    height: 48,
-    marginTop: 8,
-  },
-}); 
+} 

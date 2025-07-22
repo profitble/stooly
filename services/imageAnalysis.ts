@@ -1,9 +1,8 @@
-import { env } from '@/utils/env';
+import { validateAndGetEnv } from '@/utils/env';
 import { createClient } from '@supabase/supabase-js';
 
 // Initialize Supabase client
-const supabaseUrl = env.EXPO_PUBLIC_API_BASE_URL;
-const supabaseAnonKey = env.EXPO_PUBLIC_SUPABASE_ANON_KEY;
+const { EXPO_PUBLIC_API_BASE_URL: supabaseUrl, EXPO_PUBLIC_SUPABASE_ANON_KEY: supabaseAnonKey } = validateAndGetEnv();
 
 if (!supabaseUrl || !supabaseAnonKey) {
   throw new Error('Supabase URL and Anon Key must be provided.');

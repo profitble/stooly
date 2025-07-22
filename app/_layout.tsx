@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { Stack } from 'expo-router';
-import { GluestackUIProvider } from '@gluestack-ui/themed';
-import { config } from '../styles/gluestack-ui.config';
+import { View } from 'react-native';
 import { Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
@@ -9,6 +8,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { revenueCatService } from '../services/revenueCatService';
 import { Asset } from 'expo-asset';
+import '../global.css';
 
 // Keep splash screen visible while loading fonts
 void SplashScreen.preventAutoHideAsync();
@@ -76,7 +76,7 @@ export default function RootLayout() {
 
   return (
     <ErrorBoundary>
-      <GluestackUIProvider config={config}>
+      <View style={{ flex: 1 }}>
         <StatusBar style="dark" />
         <Animated.View 
           style={{
@@ -98,7 +98,7 @@ export default function RootLayout() {
             animation: 'none',
           }}
         />
-      </GluestackUIProvider>
+      </View>
     </ErrorBoundary>
   );
 }

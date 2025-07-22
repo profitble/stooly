@@ -1,15 +1,16 @@
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import * as SplashScreen from 'expo-splash-screen';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import {
-  Box,
-  Text,
-  Button,
-  ButtonText,
-} from '@gluestack-ui/themed';
-import { moderateScale } from '@/styles/sizing';
+import { View as RNView, Text as RNText, Pressable as RNPressable } from 'react-native';
+
+const View = RNView as any;
+const Text = RNText as any;
+const Pressable = RNPressable as any;
+const PRIMARY = '#111';
+const SECONDARY = '#6d6d6d';
+const BG = '#fdfdfd';
+const FAB_COLOR = '#a26235';
 
 function clearMemory() {
   // Force garbage collection through indirect means
@@ -30,48 +31,29 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetError
                             error.message.includes('RevenueCat');
 
   return (
-    <Box
-      flex={1}
-      backgroundColor="$background"
-      alignItems="center"
-      justifyContent="center"
-      padding={24}
-    >
+    <View className="flex-1 items-center justify-center px-6" style={{ backgroundColor: BG }}>
       <FontAwesome5 name="exclamation-circle" size={48} color="#a26235" style={{ marginBottom: 24 }} />
-      <Text
-        color="$primaryText"
-        fontWeight="$bold"
-        textAlign="center"
-        marginBottom={16}
-        sx={{ fontSize: moderateScale(24) }}
-      >
+      <Text className="text-2xl font-bold text-center mb-4" style={{ color: PRIMARY }}>
         {isSubscriptionError ? 'Subscription Issue' : 'Something Went Wrong'}
       </Text>
-      <Text
-        color="$secondaryText"
-        textAlign="center"
-        marginBottom={32}
-        sx={{ fontSize: moderateScale(16) }}
-      >
+      <Text className="text-base text-center mb-8" style={{ color: SECONDARY }}>
         {isSubscriptionError 
           ? 'Couldn\'t check your subscription. Try again.'
           : 'Please try again.'}
       </Text>
-      <Button
-        backgroundColor="$primary"
-        borderRadius={9999}
-        paddingHorizontal={24}
-        paddingVertical={12}
+      <Pressable
+        className="rounded-full px-6 py-3"
+        style={{ backgroundColor: FAB_COLOR }}
         onPress={() => {
           clearMemory();
           resetErrorBoundary();
         }}
       >
-        <ButtonText color="$fabIcon" sx={{ fontSize: moderateScale(16) }}>
+        <Text className="text-white font-medium text-base">
           Try Again
-        </ButtonText>
-      </Button>
-    </Box>
+        </Text>
+      </Pressable>
+    </View>
   );
 }
 

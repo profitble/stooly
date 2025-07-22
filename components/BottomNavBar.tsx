@@ -1,17 +1,25 @@
 import React from 'react';
-import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View as RNView, TouchableOpacity as RNTouchableOpacity, Text as RNText } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import Octicons from '@expo/vector-icons/Octicons';
 import Entypo from '@expo/vector-icons/Entypo';
 import { GearSix } from 'phosphor-react-native';
-import { config } from '../styles/gluestack-ui.config';
+
+// NativeWind aliasing
+const V = RNView as any;
+const TO = RNTouchableOpacity as any;
+const T = RNText as any;
+
+// color constants
+const ACTIVE_COLOR = '#111';
+const INACTIVE_COLOR = '#9ca3af';
+const NAV_BG = '#fdfdfd';
+const NAV_BORDER = '#E5E7EB';
 
 interface BottomNavBarProps {
   activeScreen: 'home' | 'goals' | 'settings';
 }
-
-const themeColors = (config as any).tokens.colors;
 
 export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeScreen }) => {
   const insets = useSafeAreaInsets();
@@ -24,67 +32,45 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeScreen }) => {
   ];
 
   return (
-    <View style={[styles.bottomNav, { paddingBottom: 16 + 8 }]}>
+    <V
+      className="absolute left-0 right-0 bottom-0 flex-row justify-center border-t"
+      style={{
+        paddingTop: 0,
+        paddingBottom: insets.bottom,
+        paddingRight: 88,
+        backgroundColor: NAV_BG,
+        borderTopColor: NAV_BORDER,
+        borderTopWidth: 1,
+      }}
+    >
       {navItems.map((item, index) => {
         const Icon = item.icon;
         const isActive = activeScreen === item.name;
         return (
-          <TouchableOpacity
+          <TO
             key={index}
-            style={styles.navItem}
+            className="items-center mx-[26px] translate-y-3"
             hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             onPress={() => router.push(`/(protected)/${item.name}` as any)}
           >
             {item.name === 'settings' ? (
               <Icon
                 size={26}
-                color={isActive ? themeColors.primaryText : themeColors.inactiveNavText}
+                color={isActive ? ACTIVE_COLOR : INACTIVE_COLOR}
               />
             ) : (
               <Icon
                 name={item.iconName as any}
                 size={26}
-                color={isActive ? themeColors.primaryText : themeColors.inactiveNavText}
+                color={isActive ? ACTIVE_COLOR : INACTIVE_COLOR}
               />
             )}
-            <Text style={isActive ? styles.navLabelActive : styles.navLabel}>
+            <T className={`${isActive ? 'text-[#111]' : 'text-gray-400'} text-xs mt-1 font-medium`}>
               {item.label}
-            </Text>
-          </TouchableOpacity>
+            </T>
+          </TO>
         );
       })}
-    </View>
+    </V>
   );
-};
-
-const styles = StyleSheet.create({
-  bottomNav: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    paddingVertical: 14,
-    paddingRight: 88,
-    borderTopWidth: StyleSheet.hairlineWidth,
-    borderTopColor: themeColors.navBorder,
-    backgroundColor: themeColors.cardBackground,
-  },
-  navItem: {
-    alignItems: 'center',
-    marginHorizontal: 26,
-  },
-  navLabel: {
-    fontSize: 12,
-    color: themeColors.inactiveNavText,
-    marginTop: 4,
-    fontFamily: 'SFProDisplay-Regular',
-  },
-  navLabelActive: {
-    fontSize: 12,
-    color: themeColors.primaryText,
-    marginTop: 4,
-    fontFamily: 'SFProDisplay-Regular',
-  },
-}); 
+}; 

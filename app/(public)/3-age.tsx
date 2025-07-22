@@ -1,20 +1,10 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { SafeAreaView, View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
-import {
-  Box,
-  Text,
-  Pressable,
-  Button,
-  ButtonText,
-} from '@gluestack-ui/themed';
-import { moderateScale } from '@/styles/sizing';
-
-const SIDE_MARGIN = 26;
-const BUTTON_HEIGHT = 60;
+// removed sizing helpers; using Tailwind classes
 
 const ageRanges = [
   { value: '13-19', title: '13-19', desc: 'Puberty' },
@@ -28,121 +18,71 @@ export default function AgeRangeScreen() {
   const [ageRange, setAgeRange] = useState<string | null>(null);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-[#f4f1f4]">
       {/* Header with back arrow and progress */}
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        paddingHorizontal={SIDE_MARGIN}
-        marginBottom={12}
-      >
+      <View className="flex-row items-center px-[26px] mb-3">
         <Pressable
-          width={36}
-          height={36}
-          borderRadius={18}
-          backgroundColor="#E5E5E5"
-          justifyContent="center"
-          alignItems="center"
           onPress={() => router.back()}
           accessibilityRole="button"
           accessibilityLabel="Go back"
-          marginRight={16}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          className="w-9 h-9 rounded-full bg-[#E5E5E5] justify-center items-center mr-4"
         >
           <ArrowLeft size={20} strokeWidth={1.5} color="#111" />
         </Pressable>
-        <Box
-          flex={1}
-          height={5}
-          borderRadius={9999}
-          backgroundColor="#F0F0F0"
-          overflow="hidden"
-        >
+        <View className="flex-1 h-[5px] rounded-full bg-[#F0F0F0] overflow-hidden">
           <OnboardingProgress step={3} />
-        </Box>
-      </Box>
+        </View>
+      </View>
 
-      <Box paddingHorizontal={SIDE_MARGIN}>
-        <Text fontWeight="$bold" color="$primaryText" marginBottom={12} sx={{ fontSize: moderateScale(32) }}>
+      <View className="px-[26px]">
+        <Text className="text-[32px] font-bold text-[#111] mb-3">
           How old are you?
         </Text>
-        <Text color="$primaryText" marginBottom={24} sx={{ fontSize: moderateScale(18) }}>
+        <Text className="text-[18px] text-[#111] mb-6">
           This will be used to calibrate your{"\n"}custom plan.
         </Text>
-      </Box>
+      </View>
 
       {/* Age range selection buttons */}
-      <Box
-        flex={1}
-        justifyContent="flex-start"
-        width="100%"
-        paddingHorizontal={SIDE_MARGIN}
-        marginTop={60}
-      >
+      <View className="flex-1 justify-start w-full px-[26px] mt-[80px]">
         {ageRanges.map((item) => {
           const selected = ageRange === item.value;
           return (
             <Pressable
               key={item.value}
-              width="100%"
-              borderRadius={16}
-              justifyContent="center"
-              alignItems="flex-start"
-              marginBottom={20}
-              paddingHorizontal={20}
-              paddingVertical={22}
-              backgroundColor={selected ? '#010103' : '#FFFFFF'}
               onPress={() => setAgeRange(item.value)}
               accessibilityRole="button"
               accessibilityLabel={item.title}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+              className={`w-full rounded-2xl justify-center items-start mb-5 px-5 py-[22px] ${selected ? 'bg-black' : 'bg-white'}`}
             >
-              <Text color={selected ? '$white' : '$primaryText'} fontWeight="$medium" sx={{ fontSize: moderateScale(18) }}>
+              <Text className={`text-xl font-medium ${selected ? 'text-white' : 'text-[#111]'}`}>
                 {item.title}
               </Text>
-              <Text color={selected ? '#e5e7eb' : '#6b7280'} fontWeight="$medium" sx={{ fontSize: moderateScale(16), marginTop: 4 }}>
+              <Text className={`mt-1 font-medium ${selected ? 'text-gray-200' : 'text-gray-500'}`}>
                 {item.desc}
               </Text>
             </Pressable>
           );
         })}
-      </Box>
+      </View>
 
       {/* Footer */}
-      <Box
-        position="absolute"
-        left={0}
-        right={0}
-        bottom={0}
-        backgroundColor="#fdfdfd"
-        borderTopWidth={StyleSheet.hairlineWidth}
-        borderColor="rgba(229,231,235,0.4)"
-        sx={{
-          paddingHorizontal: SIDE_MARGIN,
-          paddingTop: 20,
-          paddingBottom: insets.bottom + 8,
-        }}
+      <View
+        className="absolute left-0 right-0 bottom-0 bg-[#fdfdfd] border-t border-[#E5E7EB]/40 px-[26px] pt-5"
+        style={{ paddingBottom: insets.bottom + 8 }}
       >
-        <Button
+        <Pressable
           disabled={!ageRange}
-          width="100%"
-          height={BUTTON_HEIGHT}
-          borderRadius={BUTTON_HEIGHT / 2}
-          backgroundColor={ageRange ? '#010103' : '#b2b2b4'}
-          justifyContent="center"
-          alignItems="center"
+          className={`w-full h-[60px] rounded-full justify-center items-center ${ageRange ? 'bg-black' : 'bg-[#b2b2b4]'}`}
           onPress={() => router.push('/(public)/4-size')}
           accessibilityRole="button"
           accessibilityLabel="Next"
         >
-          <ButtonText color="$white" fontWeight="$medium" sx={{ fontSize: moderateScale(18) }}>
-            Next
-          </ButtonText>
-        </Button>
-      </Box>
+          <Text className="text-white font-medium text-xl">Next</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f1f4' },
-});

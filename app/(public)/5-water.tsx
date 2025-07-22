@@ -1,20 +1,13 @@
 import React, { useState } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import { SafeAreaView, View, Text, Pressable } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
 import Octicons from '@expo/vector-icons/Octicons';
 import { CirclesThree, DotsSixVertical } from 'phosphor-react-native';
-import {
-  Box,
-  Text,
-  Pressable,
-  Button,
-  ButtonText,
-} from '@gluestack-ui/themed';
-import { moderateScale } from '@/styles/sizing';
 
+// Constants
 const SIDE_MARGIN = 26;
 const BUTTON_HEIGHT = 60;
 
@@ -45,141 +38,75 @@ export default function WaterIntakeScreen() {
   const [waterIntake, setWaterIntake] = useState<string | null>(null);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView className="flex-1 bg-[#f4f1f4]">
       {/* Header */}
-      <Box
-        flexDirection="row"
-        alignItems="center"
-        paddingHorizontal={SIDE_MARGIN}
-        marginBottom={12}
-      >
+      <View className="flex-row items-center px-[26px] mb-3">
         <Pressable
-          width={36}
-          height={36}
-          borderRadius={18}
-          backgroundColor="#E5E5E5"
-          justifyContent="center"
-          alignItems="center"
-          marginRight={16}
           onPress={() => router.back()}
+          accessibilityRole="button"
+          accessibilityLabel="Go back"
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+          className="w-9 h-9 rounded-full bg-[#E5E5E5] justify-center items-center mr-4"
         >
           <ArrowLeft size={20} strokeWidth={1.5} color="#111" />
         </Pressable>
-        <Box
-          flex={1}
-          height={5}
-          backgroundColor="#F0F0F0"
-          borderRadius={9999}
-          overflow="hidden"
-        >
+        <View className="flex-1 h-[5px] bg-[#F0F0F0] rounded-full overflow-hidden">
           <OnboardingProgress step={5} />
-        </Box>
-      </Box>
+        </View>
+      </View>
 
       {/* Title & subtitle */}
-      <Box paddingHorizontal={SIDE_MARGIN}>
-        <Text
-          fontWeight="$bold"
-          color="$primaryText"
-          marginBottom={12}
-          sx={{ fontSize: moderateScale(31.5), letterSpacing: -0.2 }}
-        >
+      <View className="px-[26px]">
+        <Text className="text-[32px] font-bold text-[#111] mb-3">
           How many cups of water do you drink{"\n"}per day?
         </Text>
-        <Text color="$primaryText" marginBottom={24} sx={{ fontSize: moderateScale(18) }}>
+        <Text className="text-[18px] text-[#111] mb-6">
           This will be used to calibrate your{"\n"}custom plan.
         </Text>
-      </Box>
+      </View>
 
       {/* Options */}
-      <Box
-        flex={1}
-        justifyContent="flex-start"
-        width="100%"
-        paddingHorizontal={SIDE_MARGIN}
-        marginTop={40}
-      >
+      <View className="flex-1 justify-start w-full px-[26px] mt-10">
         {waterOptions.map((opt) => {
           const selected = waterIntake === opt.value;
           return (
             <Pressable
               key={opt.value}
-              width="100%"
-              borderRadius={16}
-              paddingVertical={22}
-              paddingHorizontal={20}
-              marginBottom={20}
-              backgroundColor={selected ? '#010103' : '#ffffff'}
+              className={`w-full rounded-2xl px-5 py-[22px] mb-5 ${selected ? 'bg-black' : 'bg-white'}`}
               onPress={() => setWaterIntake(opt.value)}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
-              <Box flexDirection="row" alignItems="center">
-                <Box
-                  width={40}
-                  height={40}
-                  borderRadius={20}
-                  backgroundColor="#fff"
-                  justifyContent="center"
-                  alignItems="center"
-                >
+              <View className="flex-row items-center">
+                <View className="w-10 h-10 rounded-full bg-white justify-center items-center">
                   {opt.icon()}
-                </Box>
-                <Box marginLeft={14}>
-                  <Text
-                    color={selected ? '$white' : '$primaryText'}
-                    fontWeight="$medium"
-                    sx={{ fontSize: moderateScale(15) }}
-                  >
+                </View>
+                <View className="ml-4">
+                  <Text className={`text-xl font-medium ${selected ? 'text-white' : 'text-[#111]'}`}>
                     {opt.title}
                   </Text>
-                  <Text
-                    color={selected ? '#e5e7eb' : '#6b7280'}
-                    fontWeight="$medium"
-                    sx={{ fontSize: moderateScale(12), marginTop: 4 }}
-                  >
+                  <Text className={`mt-1 font-medium ${selected ? 'text-gray-200' : 'text-gray-500'}`}>
                     {opt.desc}
                   </Text>
-                </Box>
-              </Box>
+                </View>
+              </View>
             </Pressable>
           );
         })}
-      </Box>
+      </View>
 
       {/* Footer */}
-      <Box
-        position="absolute"
-        left={0}
-        right={0}
-        bottom={0}
-        backgroundColor="#fdfdfd"
-        borderTopWidth={StyleSheet.hairlineWidth}
-        borderColor="rgba(229,231,235,0.4)"
-        sx={{
-          paddingHorizontal: SIDE_MARGIN,
-          paddingTop: 20,
-          paddingBottom: insets.bottom + 8,
-        }}
+      <View
+        className="absolute left-0 right-0 bottom-0 bg-[#fdfdfd] border-t border-[#E5E7EB]/40 px-[26px] pt-5"
+        style={{ paddingBottom: insets.bottom + 8 }}
       >
-        <Button
+        <Pressable
           disabled={!waterIntake}
-          width="100%"
-          height={BUTTON_HEIGHT}
-          borderRadius={BUTTON_HEIGHT / 2}
-          backgroundColor={waterIntake ? '#010103' : '#b2b2b4'}
-          justifyContent="center"
-          alignItems="center"
+          className={`w-full h-[60px] rounded-full justify-center items-center ${waterIntake ? 'bg-black' : 'bg-[#b2b2b4]'}`}
           onPress={() => router.push('/(public)/6-paywall')}
         >
-          <ButtonText color="$white" fontWeight="$medium" sx={{ fontSize: moderateScale(18) }}>
-            Next
-          </ButtonText>
-        </Button>
-      </Box>
+          <Text className="text-white font-medium text-xl">Next</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#f4f1f4' },
-}); 
+} 

@@ -1,40 +1,31 @@
 import React from 'react';
-import { StyleSheet, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  Platform,
+  Image,
+  Alert,
+} from 'react-native';
 import { useRouter } from 'expo-router';
 import { FileText, ShieldCheck, Trash } from 'lucide-react-native';
 import { Link } from 'phosphor-react-native';
+import { themeColors } from '@/styles/theme';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { FAB } from '@/components/FAB';
 import { clearAllUserData } from '../../services/userDataService';
-import {
-  Box,
-  Text,
-  ScrollView,
-  Pressable,
-} from '@gluestack-ui/themed';
-import { moderateScale } from '@/styles/sizing';
 
 const MenuItem = ({ icon, text, onPress, isDestructive = false, showLink = true }: { icon: React.ReactNode; text: string; onPress: () => void; isDestructive?: boolean; showLink?: boolean; }) => (
-  <Pressable
-    flexDirection="row"
-    justifyContent="space-between"
-    alignItems="center"
-    paddingVertical={20}
-    onPress={onPress}
-  >
-    <Box flexDirection="row" alignItems="center">
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+    <View style={styles.menuItemContent}>
       {icon}
-      <Text
-        color={isDestructive ? '$iconRed' : '$primaryText'}
-        fontWeight="$medium"
-        marginLeft={16}
-        sx={{ fontSize: moderateScale(16) }}
-      >
-        {text}
-      </Text>
-    </Box>
-    {showLink && <Link size={20} color={isDestructive ? '#ef4444' : '#9ca3af'} />}
-  </Pressable>
+      <Text style={[styles.menuItemText, isDestructive && styles.destructiveText]}>{text}</Text>
+    </View>
+    {showLink && <Link size={20} color={isDestructive ? themeColors.iconRed : themeColors.inactiveNavText} />}
+  </TouchableOpacity>
 );
 
 export default function SettingsScreen() {
@@ -43,7 +34,7 @@ export default function SettingsScreen() {
   const handleClearData = () => {
     Alert.alert(
       'Delete All Data',
-      'Are you sure? This will delete everything and can\'t be undone.',
+      'Are you sure? This action cannot be undone.',
       [
         { text: 'Cancel', style: 'cancel' },
         {
@@ -52,9 +43,10 @@ export default function SettingsScreen() {
           onPress: async () => {
             try {
               await clearAllUserData();
+              // After clearing data, redirect to a fresh home screen
               router.replace('/(protected)/home');
             } catch (error) {
-              Alert.alert('Error', 'Couldn\'t delete data. Please try again.');
+              Alert.alert('Error', 'Failed to delete all data. Please try again.');
             }
           },
         },
@@ -63,75 +55,108 @@ export default function SettingsScreen() {
   };
 
   return (
-    <Box flex={1} backgroundColor="$gradientStart">
-      <Box flex={1}>
-        <ScrollView
-          contentContainerStyle={{
-            paddingBottom: 120,
-            paddingHorizontal: 20,
-            paddingTop: 8,
-          }}
-        >
-          <Box>
-            <Text
-              fontWeight="$bold"
-              color="$primaryText"
-              marginBottom={8}
-              sx={{ fontSize: moderateScale(20) }}
-            >
-              Settings
-            </Text>
+    <View style={styles.container}>
+      <View style={{ flex: 1 }}>
+        <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+          <View style={styles.bodyContent}>
+            <Text style={styles.sectionTitle}>Settings</Text>
             
-            <Box
-              backgroundColor="$cardBackground"
-              borderRadius={18}
-              paddingHorizontal={16}
-              marginTop={16}
-              sx={{
-                _ios: {
-                  shadowColor: '#000',
-                  shadowOffset: { width: 0, height: 2 },
-                  shadowOpacity: 0.05,
-                  shadowRadius: 4,
-                },
-              }}
-            >
+            <View style={styles.card}>
               <MenuItem
-                icon={<FileText size={20} color="#111" />}
+                icon={<FileText size={20} color={themeColors.primaryText} />}
                 text="Terms of Service"
                 onPress={() => router.push('https://www.shitventures.xyz/terms' as any)}
               />
-              <Box height={StyleSheet.hairlineWidth} backgroundColor="$navBorder" marginLeft={52} />
+              <View style={styles.divider} />
               <MenuItem
-                icon={<ShieldCheck size={20} color="#111" />}
+                icon={<ShieldCheck size={20} color={themeColors.primaryText} />}
                 text="Privacy Policy"
                 onPress={() => router.push('https://www.shitventures.xyz/privacy' as any)}
               />
-              <Box height={StyleSheet.hairlineWidth} backgroundColor="$navBorder" marginLeft={52} />
+              <View style={styles.divider} />
               <MenuItem
-                icon={<Trash size={20} color="#ef4444" />}
+                icon={<Trash size={20} color={themeColors.iconRed} />}
                 text="Delete My Data"
                 onPress={handleClearData}
                 isDestructive
                 showLink={false}
               />
-            </Box>
-            <Text
-              color="$secondaryText"
-              textAlign="center"
-              marginTop={16}
-              paddingHorizontal={16}
-              sx={{ fontSize: moderateScale(13) }}
-            >
+            </View>
+            <Text style={styles.dataNotice}>
               All your data is stored locally on this device. Deleting it will reset the app to its initial state.
             </Text>
-          </Box>
+          </View>
         </ScrollView>
         <BottomNavBar activeScreen="settings" />
         <FAB />
-      </Box>
-    </Box>
+      </View>
+    </View>
   );
 }
 
-const styles = StyleSheet.create({}); 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: themeColors.gradientStart,
+  },
+  scrollContentContainer: {
+    paddingBottom: 120,
+  },
+  bodyContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: themeColors.primaryText,
+    fontFamily: 'SFProDisplay-Bold',
+    marginBottom: 8,
+  },
+  card: {
+    backgroundColor: themeColors.cardBackground,
+    borderRadius: 18,
+    paddingHorizontal: 16,
+    marginTop: 16,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.05,
+        shadowRadius: 4,
+      },
+    }),
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: 20,
+  },
+  menuItemContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuItemText: {
+    fontSize: 16,
+    color: themeColors.primaryText,
+    fontFamily: 'SFProDisplay-Medium',
+    marginLeft: 16,
+  },
+  destructiveText: {
+    color: themeColors.iconRed,
+  },
+  divider: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: themeColors.navBorder,
+    marginLeft: 52, 
+  },
+  dataNotice: {
+    fontSize: 13,
+    color: themeColors.secondaryText,
+    fontFamily: 'SFProDisplay-Regular',
+    textAlign: 'center',
+    marginTop: 16,
+    paddingHorizontal: 16,
+  },
+}); 

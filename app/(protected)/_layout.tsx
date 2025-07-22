@@ -5,7 +5,7 @@ import { BackHandler } from 'react-native';
 import { revenueCatService, ENTITLEMENT_ID } from '@/services/revenueCatService';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
-import { Box, Spinner } from '@gluestack-ui/themed';
+import { View as RNView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const unstable_settings = {
@@ -63,9 +63,9 @@ function ProtectedRoutes() {
 
   if (isLoading || isSubscribed === false) {
     return (
-      <Box flex={1} backgroundColor="$background" justifyContent="center" alignItems="center">
-        <Spinner color="$primary" />
-      </Box>
+      <RNView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fdfdfd' }}>
+        <ActivityIndicator size="large" color="#a26235" />
+      </RNView>
     );
   }
 

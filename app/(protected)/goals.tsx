@@ -1,14 +1,18 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { StyleSheet, SafeAreaView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  SafeAreaView,
+  TouchableOpacity,
+  ScrollView,
+  Image,
+} from 'react-native';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  Box,
-  Text,
-  ScrollView,
-  Pressable,
-} from '@gluestack-ui/themed';
+
+import { themeColors } from '@/styles/theme';
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { FAB } from '@/components/FAB';
 import { Trash } from 'phosphor-react-native';
@@ -19,47 +23,19 @@ import {
   type Goal,
 } from '../../services/goalService';
 import { GutHealthScoreCard } from '@/components/ScoreCard';
-import { moderateScale } from '@/styles/sizing';
 
 const POOP_LOGS_KEY = 'poop_logs';
 
 const ActionButton = ({ icon, title, subtitle }: { icon: string; title: string; subtitle: string }) => (
-  <Box
-    backgroundColor="$cardBackground"
-    borderRadius={18}
-    padding={16}
-    flexDirection="row"
-    alignItems="center"
-    marginTop={16}
-  >
-    <Box
-      width={50}
-      height={50}
-      borderRadius={18}
-      backgroundColor="$emptyCardBackground"
-      justifyContent="center"
-      alignItems="center"
-      marginRight={16}
-    >
-      <Text sx={{ fontSize: moderateScale(24) }}>{icon}</Text>
-    </Box>
-    <Box flex={1}>
-      <Text
-        fontWeight="$bold"
-        color="$primaryText"
-        sx={{ fontSize: moderateScale(16) }}
-      >
-        {title}
-      </Text>
-      <Text
-        color="$secondaryText"
-        marginTop={4}
-        sx={{ fontSize: moderateScale(14) }}
-      >
-        {subtitle}
-      </Text>
-    </Box>
-  </Box>
+  <View style={styles.actionButton}>
+    <View style={styles.actionIconContainer}>
+      <Text style={styles.actionIcon}>{icon}</Text>
+    </View>
+    <View style={styles.actionTextContainer}>
+      <Text style={styles.actionTitle}>{title}</Text>
+      <Text style={styles.actionSubtitle}>{subtitle}</Text>
+    </View>
+  </View>
 );
 
 const DeletableGoal = ({
@@ -73,17 +49,9 @@ const DeletableGoal = ({
 }) => {
   const ref = useRef<Swipeable>(null);
   const renderRightActions = () => (
-    <Pressable
-      onPress={onDelete}
-      backgroundColor="red"
-      justifyContent="center"
-      alignItems="center"
-      width={80}
-      marginTop={16}
-      borderRadius={18}
-    >
+    <TouchableOpacity onPress={onDelete} style={styles.deleteButton}>
       <Trash size={24} color="white" />
-    </Pressable>
+    </TouchableOpacity>
   );
 
   return (
@@ -133,6 +101,7 @@ export default function GoalsScreen() {
       setWeeklyScore(weeklyLogs[0].health_score);
     } else {
       const totalScore = weeklyLogs.reduce((sum, log) => {
+        // Handle both new (`health_score`) and old (`score`) data formats
         const score = (log as any).health_score || (log as any).score || 0;
         return sum + score;
       }, 0);
@@ -144,7 +113,7 @@ export default function GoalsScreen() {
   useEffect(() => {
     initializeGoals()
       .then(setGoals)
-      .catch(() => {});
+      .catch(console.error);
   }, []);
 
   useFocusEffect(
@@ -169,41 +138,15 @@ export default function GoalsScreen() {
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
-      <Box flex={1} backgroundColor="$background">
-        <Box flex={1}>
-          <ScrollView
-            contentContainerStyle={{
-              paddingBottom: 80,
-              paddingHorizontal: 20,
-              paddingTop: 8,
-            }}
-          >
-            <Box>
-              <Text
-                fontWeight="$bold"
-                color="$primaryText"
-                marginBottom={8}
-                sx={{ fontSize: moderateScale(20) }}
-              >
-                Daily Goals
-              </Text>
+      <View style={styles.container}>
+        <View style={{ flex: 1 }}>
+          <ScrollView contentContainerStyle={styles.scrollContentContainer}>
+            <View style={styles.bodyContent}>
+              <Text style={styles.sectionTitle}>Daily Goals</Text>
               {!hasLogs ? (
-                <Box
-                  backgroundColor="$cardBackground"
-                  borderRadius={18}
-                  padding={24}
-                  alignItems="center"
-                  justifyContent="center"
-                  marginTop={16}
-                >
-                  <Text
-                    color="$secondaryText"
-                    textAlign="center"
-                    sx={{ fontSize: moderateScale(16) }}
-                  >
-                    Complete your first analysis to see your daily goals.
-                  </Text>
-                </Box>
+                <View style={styles.emptyCard}>
+                  <Text style={styles.emptyText}>Complete your first analysis to see your daily goals.</Text>
+                </View>
               ) : goals.length > 0 ? (
                 goals.map(goal => (
                   <DeletableGoal
@@ -214,42 +157,98 @@ export default function GoalsScreen() {
                   />
                 ))
               ) : (
-                <Box
-                  backgroundColor="$cardBackground"
-                  borderRadius={18}
-                  padding={24}
-                  alignItems="center"
-                  justifyContent="center"
-                  marginTop={16}
-                >
-                  <Text
-                    color="$secondaryText"
-                    textAlign="center"
-                    sx={{ fontSize: moderateScale(16) }}
-                  >
-                    Great work! Consistency is key. Check back tomorrow for new goals.
-                  </Text>
-                </Box>
+                <View style={styles.emptyCard}>
+                  <Text style={styles.emptyText}>Great work! Consistency is key. Check back tomorrow for new goals.</Text>
+                </View>
               )}
-              <Box marginTop={24}>
-                <Text
-                  fontWeight="$bold"
-                  color="$primaryText"
-                  marginBottom={8}
-                  sx={{ fontSize: moderateScale(20) }}
-                >
-                  Weekly Progress
-                </Text>
+              <View style={{ marginTop: 24 }}>
+                <Text style={styles.sectionTitle}>Weekly Progress</Text>
                 <GutHealthScoreCard score={weeklyScore} />
-              </Box>
-            </Box>
+              </View>
+            </View>
           </ScrollView>
           <BottomNavBar activeScreen="goals" />
           <FAB />
-        </Box>
-      </Box>
+        </View>
+      </View>
     </GestureHandlerRootView>
   );
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: themeColors.background,
+  },
+  scrollContentContainer: {
+    paddingBottom: 80,
+  },
+  bodyContent: {
+    paddingHorizontal: 20,
+    paddingTop: 8,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: themeColors.primaryText,
+    fontFamily: 'SFProDisplay-Bold',
+    marginBottom: 8,
+  },
+  emptyCard: {
+    backgroundColor: themeColors.cardBackground,
+    borderRadius: 18,
+    padding: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: themeColors.secondaryText,
+    textAlign: 'center',
+    fontFamily: 'SFProDisplay-Medium',
+  },
+  actionButton: {
+    backgroundColor: themeColors.cardBackground,
+    borderRadius: 18,
+    padding: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  actionIconContainer: {
+    width: 50,
+    height: 50,
+    borderRadius: 18,
+    backgroundColor: themeColors.emptyCardBackground,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 16,
+  },
+  actionIcon: {
+    fontSize: 24,
+  },
+  actionTextContainer: {
+    flex: 1,
+  },
+  actionTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: themeColors.primaryText,
+    fontFamily: 'SFProDisplay-Bold',
+  },
+  actionSubtitle: {
+    fontSize: 14,
+    color: themeColors.secondaryText,
+    marginTop: 4,
+    fontFamily: 'SFProDisplay-Regular',
+  },
+  deleteButton: {
+    backgroundColor: 'red',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 80,
+    marginTop: 16,
+    borderRadius: 18,
+  },
+});

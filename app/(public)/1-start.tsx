@@ -1,21 +1,7 @@
 import React from 'react';
-import {
-  StyleSheet,
-  SafeAreaView,
-} from 'react-native';
+import { SafeAreaView, View, Text, Pressable, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import {
-  Box,
-  Text,
-  Button,
-  ButtonText,
-  Image,
-} from '@gluestack-ui/themed';
-import { horizontalScale, verticalScale, moderateScale } from '@/styles/sizing';
-
-const SIDE_MARGIN = horizontalScale(26);
-const BUTTON_HEIGHT = verticalScale(60);
 
 export default function SigninScreen() {
   const router = useRouter();
@@ -26,102 +12,45 @@ export default function SigninScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Box
-        flex={1}
-        justifyContent="center"
-        alignItems="center"
-        sx={{
-          paddingHorizontal: SIDE_MARGIN,
-          paddingBottom: verticalScale(250),
-        }}
-      >
+    <SafeAreaView className="flex-1 bg-background">
+      <View className="flex-1 items-center justify-center px-6 pb-[250px]">
         <Image
           source={require('@/assets/images/cover.png')}
           resizeMode="contain"
           alt="A cartoon poop emoji in a toilet."
-          sx={{
-            width: '100%',
-            aspectRatio: 1,
-            maxWidth: 400,
-          }}
+          className="w-full aspect-square max-w-[275px]"
         />
-      </Box>
+      </View>
 
-      <Box
-        position="absolute"
-        bottom={0}
-        left={0}
-        right={0}
-        backgroundColor="$background"
-        alignItems="center"
-        sx={{
-          paddingHorizontal: SIDE_MARGIN,
-          paddingTop: verticalScale(32),
+      <View
+        className="absolute items-center bg-background px-6 pt-8"
+        style={{
+          bottom: 0,
+          left: 0,
+          right: 0,
           paddingBottom: insets.bottom > 0 ? insets.bottom + 50 : 170,
         }}
       >
-        <Box
-          width="100%"
-          sx={{
-            marginBottom: verticalScale(32),
-          }}
-        >
-          <Text
-            textAlign="center"
-            color="$primaryText"
-            fontWeight="$bold"
-            letterSpacing={-0.4}
-            sx={{
-              fontSize: moderateScale(36),
-            }}
-          >
-            Welcome to <Text color="$primary">Stooly</Text>
+        <View className="w-full mb-8">
+          <Text className="text-center text-primaryText font-bold text-4xl tracking-tight">
+            Welcome to <Text className="text-primary">Stooly</Text>
           </Text>
-          <Text
-            textAlign="center"
-            color="$secondaryText"
-            fontWeight="$regular"
-            sx={{
-              fontSize: moderateScale(18),
-              marginTop: verticalScale(12),
-            }}
-          >
+          <Text className="text-center text-secondaryText text-xl mt-3">
             Build Habits Towards Better Gut Health
           </Text>
-        </Box>
+        </View>
 
-        <Button
+        <Pressable
           onPress={handleContinue}
-          width="100%"
-          backgroundColor="$primary"
-          justifyContent="center"
-          alignItems="center"
-          sx={{
-            height: BUTTON_HEIGHT,
-            borderRadius: moderateScale(16),
-          }}
+          className="w-full items-center justify-center bg-black h-[60px] rounded-2xl"
           accessibilityRole="button"
           accessibilityLabel="Start"
         >
-          <ButtonText
-            color="$buttonText"
-            fontWeight="$medium"
-            sx={{
-              fontSize: moderateScale(18),
-            }}
-          >
+          <Text className="text-white font-bold text-xl">
             Start
-          </ButtonText>
-        </Button>
-      </Box>
+          </Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fdfdfd',
-  },
-}); 
+} 
