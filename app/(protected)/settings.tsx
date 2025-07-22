@@ -3,11 +3,9 @@ import {
   View,
   Text,
   StyleSheet,
-  SafeAreaView,
   TouchableOpacity,
   ScrollView,
   Platform,
-  Image,
   Alert,
 } from 'react-native';
 import { useRouter } from 'expo-router';

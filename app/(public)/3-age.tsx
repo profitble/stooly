@@ -4,7 +4,6 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ArrowLeft } from 'lucide-react-native';
 import OnboardingProgress from '@/components/OnboardingProgress';
-// removed sizing helpers; using Tailwind classes
 
 const ageRanges = [
   { value: '13-19', title: '13-19', desc: 'Puberty' },
