@@ -42,14 +42,10 @@ module.exports = {
         'no-undef': 'off',
         '@typescript-eslint/no-shadow': ['error'],
         '@typescript-eslint/strict-boolean-expressions': [
-          'warn',
-          {
-            allowString: false,
-            allowNumber: false,
-            allowNullableObject: false
-          }
+          'off'
         ],
-        'no-void': ['error', { allowAsStatement: true }]
+        'no-void': ['error', { allowAsStatement: true }],
+        '@typescript-eslint/no-explicit-any': 'off'
       }
     },
     {

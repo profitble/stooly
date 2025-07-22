@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Alert,
-  Platform,
   SafeAreaView,
   ActivityIndicator,
   View,
@@ -14,7 +13,6 @@ import { useRouter } from 'expo-router';
 import { revenueCatService, PACKAGE_ID, ENTITLEMENT_ID } from '@/services/revenueCatService';
 import { PURCHASES_ERROR_CODE } from 'react-native-purchases';
 
-const BUTTON_HEIGHT = 56;
 const MINIMUM_BOTTOM_PADDING = 34;
 
 export default function PaywallScreen() {
@@ -22,11 +20,7 @@ export default function PaywallScreen() {
   const insets = useSafeAreaInsets();
   const [isPurchasing, setIsPurchasing] = useState(false);
 
-  useEffect(() => {
-    void setupPurchases();
-  }, []);
-
-  const setupPurchases = async () => {
+  const setupPurchases = useCallback(async () => {
     try {
       const customerInfo = await revenueCatService.getCustomerInfo();
       if (customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive) {
@@ -35,10 +29,14 @@ export default function PaywallScreen() {
       }
       const offerings = await revenueCatService.getOfferings();
       if (!offerings.current) throw new Error('No subscription options available');
-    } catch (error: any) {
+    } catch (error: unknown) {
       Alert.alert('Subscription Error', 'Setting up subscriptions. Please try again soon.');
     }
-  };
+  }, [router]);
+
+  useEffect(() => {
+    void setupPurchases();
+  }, [setupPurchases]);
 
   const handlePurchase = async () => {
     setIsPurchasing(true);
@@ -93,7 +91,7 @@ export default function PaywallScreen() {
 
       {/* Bottom Sheet */}
       <View
-        className="absolute left-0 right-0 bottom-0 bg-[#f4f1f4] rounded-t-3xl px-6 pt-5"
+        className="absolute left-0 right-0 bottom-0 bg-[#f4f1f4] rounded-t-3xl px-6 pt-8"
         style={{
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -3 },
@@ -106,7 +104,7 @@ export default function PaywallScreen() {
         <Pressable
           onPress={handlePurchase}
           disabled={isPurchasing}
-          className="h-[56px] rounded-2xl bg-black justify-center items-center mb-2"
+          className="h-[56px] rounded-2xl bg-black justify-center items-center mb-4"
           accessibilityRole="button"
         >
           {isPurchasing ? (

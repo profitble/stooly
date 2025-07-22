@@ -35,7 +35,7 @@ export default function SigninScreen() {
           <Text className="text-center text-primaryText font-bold text-4xl tracking-tight">
             Welcome to <Text className="text-primary">Stooly</Text>
           </Text>
-          <Text className="text-center text-secondaryText text-xl mt-3">
+          <Text className="text-center text-secondaryText text-xl mt-2">
             Build Habits Towards Better Gut Health
           </Text>
         </View>

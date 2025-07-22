@@ -1,13 +1,9 @@
-import Purchases, { 
-  CustomerInfo, 
-  PurchasesError,
-  PurchasesPackage,
-  PurchasesOfferings
-} from 'react-native-purchases';
+import Purchases from 'react-native-purchases';
+import type { CustomerInfo, PurchasesError, PurchasesPackage, PurchasesOfferings } from 'react-native-purchases';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getOrCreateAppUserId } from '@/utils/userId';
 import { Platform } from 'react-native';
-import { validateAndGetEnv } from '@/utils/env';
+import Constants from 'expo-constants';
 
 const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
@@ -48,13 +44,12 @@ class RevenueCatService {
 
     for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
       try {
-        const env = validateAndGetEnv();
         const apiKey = Platform.select({
-          ios: env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
+          ios: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? (Constants as unknown as { manifest?: any }).manifest?.extra?.revenueCatApiKeyIos,
           default: null,
         });
 
-        if (!apiKey) {
+        if (apiKey == null) {
           throw new Error('RevenueCat API key not configured for this platform');
         }
 
@@ -74,8 +69,8 @@ class RevenueCatService {
         
         this.isInitialized = true;
         return { success: true };
-      } catch (error) {
-        lastError = error instanceof Error ? error : new Error(String(error));
+      } catch (error: unknown) {
+        lastError = error instanceof Error ? error : new Error(String(error as unknown));
         
         if (attempt < RETRY_ATTEMPTS - 1) {
           await new Promise(resolve => setTimeout(resolve, currentDelay));

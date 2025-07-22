@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import { Picker } from '@react-native-picker/picker';
 import {
   SafeAreaView,
@@ -96,11 +96,11 @@ export default function HeightWeightScreen() {
       </View>
 
       {/* Unit switch */}
-      <View className="w-[320px] self-center flex-row justify-between items-center mt-[60px] mb-6 relative">
-        <View className="absolute left-1/2 w-[160px] items-center ml-[-80px]">
+      <View className="w-[320px] self-center flex-row items-center justify-between mt-[60px] mb-6">
+          <Text className={`text-[22px] font-medium px-8 text-center ${!metric ? 'text-[#111]' : 'text-[#d5d5d7]'}`}>Imperial</Text>
           <Switch
             value={metric}
-            onValueChange={() => {
+            onValueChange={useCallback(() => {
               setMetric(prev => {
                 const next = !prev;
                 if (next) {
@@ -133,15 +133,13 @@ export default function HeightWeightScreen() {
                 }
                 return next;
               });
-            }}
+            }, [metric, heightValue, weightValue])}
             trackColor={{ false: '#090909', true: '#090909' }}
             thumbColor="#ffffff"
             ios_backgroundColor="#090909"
           />
+          <Text className={`text-[22px] font-medium px-8 text-center ${metric ? 'text-[#111]' : 'text-[#d5d5d7]'}`}>Metric</Text>
         </View>
-        <Text style={{ color: !metric ? '#111' : '#d5d5d7', transform: [{ translateX: -15 }], width:160, textAlign:'center', fontSize:22, fontWeight:'500' }}>Imperial</Text>
-        <Text style={{ color: metric ? '#111' : '#d5d5d7', transform: [{ translateX: 15 }], width:160, textAlign:'center', fontSize:22, fontWeight:'500' }}>Metric</Text>
-      </View>
 
       {/* Pickers */}
       <View className="flex-1 flex-row justify-evenly">
