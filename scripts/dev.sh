@@ -17,7 +17,7 @@ fi
 # Create development RevenueCat service that always returns active subscription
 echo "🚫 Disabling paywall for development..."
 cat > services/revenueCatService.ts << 'EOL'
-import { CustomerInfo, PurchasesOfferings } from 'react-native-purchases';
+import type { CustomerInfo, PurchasesOfferings } from 'react-native-purchases';
 
 // DEV: Mock implementation of RevenueCatService for development
 

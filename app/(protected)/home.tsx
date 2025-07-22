@@ -18,6 +18,7 @@ import { useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { BottomNavBar } from '@/components/BottomNavBar';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { themeColors } from '@/styles/theme';
 import { FAB } from '@/components/FAB';
 import { analyzeImage, type AnalysisResult } from '@/services/imageAnalysis';
@@ -86,14 +87,17 @@ const mapAppearanceToBristol = (appearance?: string): number => {
   }
 };
 
-const bristolImageMap: { [key: number]: any } = {
-  1: require('@/assets/images/type_1.png'),
-  2: require('@/assets/images/type_2.png'),
-  3: require('@/assets/images/type_3.png'),
-  4: require('@/assets/images/type_4.png'),
-  5: require('@/assets/images/type_5.png'),
-  6: require('@/assets/images/type_6.png'),
-  7: require('@/assets/images/type_7.png'),
+const getBristolImage = (type: number) => {
+  switch (type) {
+    case 1: return require('@/assets/images/type_1.png');
+    case 2: return require('@/assets/images/type_2.png');
+    case 3: return require('@/assets/images/type_3.png');
+    case 4: return require('@/assets/images/type_4.png');
+    case 5: return require('@/assets/images/type_5.png');
+    case 6: return require('@/assets/images/type_6.png');
+    case 7: return require('@/assets/images/type_7.png');
+    default: return require('@/assets/images/type_4.png');
+  }
 };
 
 const LAST_POOP_TIMESTAMP_KEY = 'last_poop_timestamp';
@@ -131,14 +135,24 @@ export default function HomeScreen() {
     useCallback(() => {
       const loadDataOnFocus = async () => {
         // First, always load the latest state from local storage to prevent flicker.
-        const logsString = await AsyncStorage.getItem(POOP_LOGS_KEY);
-        const logs = logsString ? (JSON.parse(logsString) as (AnalysisResult & { timestamp: string })[]) : [];
+        let logs: (AnalysisResult & { timestamp: string })[] = [];
+        try {
+          const logsString = await AsyncStorage.getItem(POOP_LOGS_KEY);
+          logs = logsString ? (JSON.parse(logsString) as (AnalysisResult & { timestamp: string })[]) : [];
+        } catch (error) {
+          console.error('Failed to load logs:', error);
+        }
         if (logs.length > 0) {
           setAllLogs(logs);
           setLatestAnalysis(logs[logs.length - 1]);
         }
         
-        const timestamp = await AsyncStorage.getItem(LAST_POOP_TIMESTAMP_KEY);
+        let timestamp: string | null = null;
+        try {
+          timestamp = await AsyncStorage.getItem(LAST_POOP_TIMESTAMP_KEY);
+        } catch (error) {
+          console.error('Failed to fetch timestamp:', error);
+        }
         if (timestamp) {
           const lastPoopDate = new Date(timestamp);
           const now = new Date();
@@ -188,11 +202,16 @@ export default function HomeScreen() {
         setHoursSinceLastPoop(0);
 
         // Save to storage
-        const logsString = await AsyncStorage.getItem(POOP_LOGS_KEY);
-        const logs = logsString ? JSON.parse(logsString) : [];
-        logs.push(newLog);
-        await AsyncStorage.setItem(POOP_LOGS_KEY, JSON.stringify(logs));
-        await AsyncStorage.setItem(LAST_POOP_TIMESTAMP_KEY, timestamp);
+        try {
+          const existing = await AsyncStorage.getItem(POOP_LOGS_KEY);
+          const logsArr = existing ? JSON.parse(existing) : [];
+          logsArr.push(newLog);
+          await AsyncStorage.setItem(POOP_LOGS_KEY, JSON.stringify(logsArr));
+          await AsyncStorage.setItem(LAST_POOP_TIMESTAMP_KEY, timestamp);
+        } catch (error) {
+          console.error('Failed to save logs:', error);
+          presentError('Failed to save analysis data');
+        }
       } else {
         presentError(result.error);
       }
@@ -205,6 +224,7 @@ export default function HomeScreen() {
   };
 
   return (
+    <ErrorBoundary>
     <View style={{ flex: 1, backgroundColor: themeColors.background }}>
       <View style={{ flex: 1 }}>
         {/* Weekly day tracker removed */}
@@ -307,7 +327,7 @@ export default function HomeScreen() {
               [...allLogs].reverse().map((log, index) => (
                 <View key={index} style={styles.recentLogCard}>
                   <Image
-                    source={bristolImageMap[mapAppearanceToBristol(log.appearance)]}
+                    source={getBristolImage(mapAppearanceToBristol(log.appearance))}
                     style={styles.recentLogIcon}
                   />
                   <View style={styles.recentLogTextContainer}>
@@ -332,6 +352,7 @@ export default function HomeScreen() {
         <FAB />
       </View>
     </View>
+    </ErrorBoundary>
   );
 }
 

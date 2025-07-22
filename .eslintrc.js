@@ -41,6 +41,7 @@ module.exports = {
       rules: {
         'no-undef': 'off',
         '@typescript-eslint/no-shadow': ['error'],
+        '@typescript-eslint/no-unused-vars': 'off',
         '@typescript-eslint/strict-boolean-expressions': [
           'off'
         ],
