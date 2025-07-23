@@ -15,6 +15,7 @@ module.exports = function (api) {
           '~': '.',
         },
       }],
+      'transform-remove-console',
       'react-native-reanimated/plugin',
     ],
   };

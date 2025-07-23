@@ -137,7 +137,6 @@ export default function HomeScreen() {
           const logsString = await AsyncStorage.getItem(POOP_LOGS_KEY);
           logs = logsString ? (JSON.parse(logsString) as (AnalysisResult & { timestamp: string })[]) : [];
         } catch (error) {
-          console.error('Failed to load logs:', error);
         }
         if (logs.length > 0) {
           setAllLogs(logs);
@@ -148,7 +147,6 @@ export default function HomeScreen() {
         try {
           timestamp = await AsyncStorage.getItem(LAST_POOP_TIMESTAMP_KEY);
         } catch (error) {
-          console.error('Failed to fetch timestamp:', error);
         }
         if (timestamp) {
           const lastPoopDate = new Date(timestamp);
@@ -206,7 +204,6 @@ export default function HomeScreen() {
           await AsyncStorage.setItem(POOP_LOGS_KEY, JSON.stringify(logsArr));
           await AsyncStorage.setItem(LAST_POOP_TIMESTAMP_KEY, timestamp);
         } catch (error) {
-          console.error('Failed to save logs:', error);
           presentError('Failed to save analysis data');
         }
       } else {

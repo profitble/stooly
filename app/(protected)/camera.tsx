@@ -1,47 +1,28 @@
-console.log('[FILE LOADED: camera.tsx]');
 import React, { useState, useRef } from 'react';
-console.log('[CAMERA_IMPORT] React imported');
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
-console.log('[CAMERA_IMPORT] React Native components imported');
 import { useRouter } from 'expo-router';
-console.log('[CAMERA_IMPORT] useRouter imported');
 import { CameraView, useCameraPermissions } from 'expo-camera';
-console.log('[CAMERA_IMPORT] Camera components imported');
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-console.log('[CAMERA_IMPORT] useSafeAreaInsets imported');
 import { X as CloseIcon, Zap } from 'lucide-react-native';
-console.log('[CAMERA_IMPORT] Icons imported');
 import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
-console.log('[CAMERA_IMPORT] Image manipulator imported');
 import { setPhotoImage } from '../../services/imageDataService';
-console.log('[CAMERA_IMPORT] Image data service imported');
 
 const { width } = Dimensions.get('window');
 const BUTTON_SIZE = 72;
 const FOCUS_BOX_SIZE = width * 0.75;
-console.log('[CAMERA_CONSTANTS] Camera constants defined');
 
 export default function CameraScreen() {
-  console.log('[CAMERA_COMPONENT] CameraScreen component called');
   const router = useRouter();
-  console.log('[CAMERA_COMPONENT] Router obtained');
   const [facing, setFacing] = useState<'back' | 'front'>('back');
-  console.log('[CAMERA_COMPONENT] Camera facing state initialized');
   const [permission, requestPermission] = useCameraPermissions();
-  console.log('[CAMERA_COMPONENT] Camera permissions obtained:', !!permission);
   const [flash, setFlash] = useState<'on' | 'off'>('off');
-  console.log('[CAMERA_COMPONENT] Flash state initialized');
   const insets = useSafeAreaInsets();
-  console.log('[CAMERA_COMPONENT] Safe area insets obtained');
   const cameraRef = useRef<CameraView>(null);
-  console.log('[CAMERA_COMPONENT] Camera ref created');
 
   if (!permission) {
-    console.log('[CAMERA_PERMISSION] Permission not loaded yet');
     return null;
   }
   if (!permission.granted) {
-    console.log('[CAMERA_PERMISSION] Permission not granted, showing request UI');
     return (
       <View style={styles.permissionWrapper}>
         <Text style={styles.permissionText}>Camera permission is required.</Text>
@@ -52,20 +33,14 @@ export default function CameraScreen() {
     );
   }
 
-  console.log('[CAMERA_PERMISSION] Camera permissions granted');
 
   const handleTakePicture = async () => {
-    console.log('[CAMERA_PHOTO] handleTakePicture called');
     if (cameraRef.current) {
-      console.log('[CAMERA_PHOTO] Camera ref available, taking picture');
       try {
-        console.log('[CAMERA_PHOTO] Calling takePictureAsync');
         const photo = await cameraRef.current.takePictureAsync({
           quality: 1, // Start with high quality, will be compressed next
         });
-        console.log('[CAMERA_PHOTO] Photo taken, URI:', !!photo.uri);
 
-        console.log('[CAMERA_PHOTO] Starting image manipulation');
         const compressedImage = await manipulateAsync(
           photo.uri,
           [{ resize: { width: 800 } }], // Resize to a reasonable width
@@ -75,16 +50,11 @@ export default function CameraScreen() {
             base64: true,
           },
         );
-        console.log('[CAMERA_PHOTO] Image compressed, base64 length:', compressedImage.base64?.length || 0);
         
-        console.log('[CAMERA_PHOTO] Setting photo image in data service');
         setPhotoImage(compressedImage.base64!);
-        console.log('[CAMERA_PHOTO] Navigating to home screen');
         router.replace('/(protected)/home');
 
       } catch (e) {
-        console.error('[CAMERA_PHOTO] Failed to take picture:', e);
-        console.log('[CAMERA_PHOTO] Showing error alert');
         Alert.alert('Camera Issue', 'Can\'t take photo. Try again.', [{ text: 'OK' }]);
       }
     }

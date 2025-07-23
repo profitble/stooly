@@ -1,6 +1,4 @@
-console.log('[FILE LOADED: 6-paywall.tsx]');
 import React, { useState, useEffect, useCallback } from 'react';
-console.log('[PAYWALL_IMPORT] React hooks imported');
 import {
   Alert,
   SafeAreaView,
@@ -10,69 +8,45 @@ import {
   Pressable,
   Image,
 } from 'react-native';
-console.log('[PAYWALL_IMPORT] React Native components imported');
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-console.log('[PAYWALL_IMPORT] useSafeAreaInsets imported');
 import { useRouter } from 'expo-router';
-console.log('[PAYWALL_IMPORT] useRouter imported');
 import { revenueCatService, PACKAGE_ID, ENTITLEMENT_ID } from '@/services/revenueCatService';
-console.log('[PAYWALL_IMPORT] RevenueCat service imported');
 import { PURCHASES_ERROR_CODE } from 'react-native-purchases';
-console.log('[PAYWALL_IMPORT] Purchases error codes imported');
 
 const MINIMUM_BOTTOM_PADDING = 34;
 
 export default function PaywallScreen() {
-  console.log('[PAYWALL_COMPONENT] PaywallScreen component called');
   const router = useRouter();
-  console.log('[PAYWALL_COMPONENT] Router obtained');
   const insets = useSafeAreaInsets();
-  console.log('[PAYWALL_COMPONENT] Safe area insets obtained');
   const [isPurchasing, setIsPurchasing] = useState(false);
-  console.log('[PAYWALL_COMPONENT] State initialized');
 
   const setupPurchases = useCallback(async () => {
-    console.log('[PAYWALL_SETUP] setupPurchases called');
     try {
-      console.log('[PAYWALL_SETUP] Getting customer info');
       const customerInfo = await revenueCatService.getCustomerInfo();
-      console.log('[PAYWALL_SETUP] Customer info received, checking entitlements');
       if (customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive) {
-        console.log('[PAYWALL_SETUP] User has active subscription, redirecting to home');
         router.replace('/(protected)/home');
         return;
       }
-      console.log('[PAYWALL_SETUP] No active subscription, getting offerings');
       const offerings = await revenueCatService.getOfferings();
-      console.log('[PAYWALL_SETUP] Offerings received:', !!offerings.current);
       if (!offerings.current) throw new Error('No subscription options available');
     } catch (error: unknown) {
-      console.error('[PAYWALL_SETUP] Error in setupPurchases:', error);
       Alert.alert('Subscription Error', 'Setting up subscriptions. Please try again soon.');
     }
   }, [router]);
 
   useEffect(() => {
-    console.log('[PAYWALL_EFFECT] useEffect called - setting up purchases');
     void setupPurchases();
   }, [setupPurchases]);
 
   const handlePurchase = async () => {
-    console.log('[PAYWALL_PURCHASE] handlePurchase called');
     setIsPurchasing(true);
-    console.log('[PAYWALL_PURCHASE] Purchase state set to true');
     try {
-      console.log('[PAYWALL_PURCHASE] Calling purchasePackage with:', PACKAGE_ID);
       const customerInfo = await revenueCatService.purchasePackage(PACKAGE_ID);
-      console.log('[PAYWALL_PURCHASE] Purchase completed, checking entitlements');
       if (customerInfo?.entitlements.active[ENTITLEMENT_ID]?.isActive) {
-        console.log('[PAYWALL_PURCHASE] Purchase successful, redirecting to home');
         router.replace('/(protected)/home');
       }
     } catch (e: any) {
-      console.error('[PAYWALL_PURCHASE] Purchase error:', e);
       if (e.code !== PURCHASES_ERROR_CODE.PURCHASE_CANCELLED_ERROR) {
-        console.log('[PAYWALL_PURCHASE] Showing purchase error alert');
         Alert.alert('Purchase Error', e.message);
       }
     } finally {
