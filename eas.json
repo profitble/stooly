@@ -4,8 +4,11 @@
   },
   "build": {
     "production": {
+      "developmentClient": false,
+      "distribution": "store",
       "ios": {
-        "simulator": false
+        "simulator": false,
+        "buildConfiguration": "Release"
       },
       "env": {
         "EXPO_PUBLIC_API_BASE_URL": "https://tzgrlkathfzhcymsukji.supabase.co/functions/v1",
