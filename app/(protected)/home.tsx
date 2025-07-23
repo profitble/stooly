@@ -14,7 +14,6 @@ import Svg, { Circle } from 'react-native-svg';
 import { Clock, Waves, Drop } from 'phosphor-react-native';
 import { useFocusEffect } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
 import { BottomNavBar } from '@/components/BottomNavBar';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { themeColors } from '@/styles/theme';

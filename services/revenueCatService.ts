@@ -45,7 +45,7 @@ class RevenueCatService {
     for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
       try {
         const apiKey = Platform.select({
-          ios: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS ?? (Constants as unknown as { manifest?: any }).manifest?.extra?.revenueCatApiKeyIos,
+          ios: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
           default: null,
         });
 

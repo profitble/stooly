@@ -39,4 +39,4 @@ export const FAB = () => {
       <Plus size={32} weight="bold" color={FAB_ICON} />
     </Pressable>
   );
-}; 
+};
