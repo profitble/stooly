@@ -17,7 +17,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.maxta.poop',
-    buildNumber: '17',
+    buildNumber: '18',
     config: {
       usesNonExemptEncryption: false,
     },
@@ -37,6 +37,9 @@ const config: ExpoConfig = {
         "UIInterfaceOrientationPortraitUpsideDown"
       ]
     },
+    entitlements: {
+      'com.apple.InAppPurchase': true,
+    },
   },
   plugins: [
     "expo-router",
@@ -45,8 +48,10 @@ const config: ExpoConfig = {
       "expo-build-properties",
       {
         ios: {
-          useFrameworks: "static",
+          useFrameworks: "dynamic",
           deploymentTarget: "15.1",
+          hermesEnabled: true,
+          newArchEnabled: false,
         },
       }
     ]

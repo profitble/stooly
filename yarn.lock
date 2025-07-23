@@ -1904,10 +1904,10 @@
   dependencies:
     nanoid "^3.3.11"
 
-"@revenuecat/purchases-typescript-internal@14.2.0":
-  version "14.2.0"
-  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-typescript-internal/-/purchases-typescript-internal-14.2.0.tgz#3c86d6e8410db33a6c40aa5fe279dad3c2418644"
-  integrity sha512-C/9RB2fZk/19HxCO+iFIMBR6WG5TtioUtHlsB7evYwLlHetMFmz79VNcRN1yXmHs1pcLcoRd/tnw9P0neG/54Q==
+"@revenuecat/purchases-typescript-internal@15.0.0":
+  version "15.0.0"
+  resolved "https://registry.yarnpkg.com/@revenuecat/purchases-typescript-internal/-/purchases-typescript-internal-15.0.0.tgz#9197fb1218238ac695a799b8c06d648430214f13"
+  integrity sha512-EUR2jD8zk59MNON3vYpU90J+rvLxP09jO1/x2rSMV8w6dd5BGoxIP5x5So5HdISfz5Lz1egeVbc2LQ+5Ord4fw==
 
 "@rtsao/scc@^1.1.0":
   version "1.1.0"
@@ -7496,12 +7496,12 @@ react-native-is-edge-to-edge@^1.1.6, react-native-is-edge-to-edge@^1.1.7:
   resolved "https://registry.yarnpkg.com/react-native-is-edge-to-edge/-/react-native-is-edge-to-edge-1.2.1.tgz#64e10851abd9d176cbf2b40562f751622bde3358"
   integrity sha512-FLbPWl/MyYQWz+KwqOZsSyj2JmLKglHatd3xLZWskXOpRaio4LfEDEz8E/A6uD8QoTHW6Aobw1jbEwK7KMgR7Q==
 
-react-native-purchases@^8.11.10:
-  version "8.11.10"
-  resolved "https://registry.yarnpkg.com/react-native-purchases/-/react-native-purchases-8.11.10.tgz#b00126ff2ec7e7c0da37621ee38d97ddfccbfbad"
-  integrity sha512-ceIYLqH+jr3pRcQ7VxGwyTwpa+Qg1ERk47Bx1lJ8lCBdDjI4HLE+6//3X5I5e+2tpTo3iEy84y/+SyOB/tOLmg==
+react-native-purchases@^9.4.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/react-native-purchases/-/react-native-purchases-9.0.0.tgz#5fa2eb8163fec063bda40950bbce7921774b4e3e"
+  integrity sha512-zBcP15n07CujuYAwEX3kWWjo5O9xwME6WLhuGAsQ5zbkP3eNM3TQtIM1O4HDxNZxkRlpZn1Z3YYWtJ1v/ljqMQ==
   dependencies:
-    "@revenuecat/purchases-typescript-internal" "14.2.0"
+    "@revenuecat/purchases-typescript-internal" "15.0.0"
 
 react-native-reanimated@3.17.4:
   version "3.17.4"
