@@ -1,6 +1,8 @@
+console.log('[BOOT] FILE LOADED: app.config.ts');
 import type { ExpoConfig } from 'expo/config';
 
 const revenueCatApiKeyIos = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
+console.log('[CONFIG] RevenueCat API Key iOS in config:', !!revenueCatApiKeyIos, 'Length:', revenueCatApiKeyIos?.length || 0);
 
 const config: ExpoConfig = {
   name: "Stooly",
@@ -18,7 +20,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.maxta.poop',
-    buildNumber: '11',
+    buildNumber: '12',
     config: {
       usesNonExemptEncryption: false,
     },

@@ -1,3 +1,4 @@
+console.log('[BOOT] FILE LOADED: app/_layout.tsx');
 import React, { useEffect, useRef } from 'react';
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
@@ -33,31 +34,47 @@ export default function RootLayout() {
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
+    console.log('[REACT] App mounted - RootLayout useEffect triggered');
     let isMounted = true;
     
     async function initializeApp() {
+      console.log('[REACT] Starting app initialization...');
+      
       try {
         // Start RevenueCat initialization immediately
+        console.log('[REACT] Starting RevenueCat initialization...');
         const initResult = await revenueCatService.initialize();
         if (!initResult.success) {
+          console.log('[REACT] [ERROR] RevenueCat initialization failed');
           throw initResult.error;
         }
+        console.log('[REACT] RevenueCat initialization completed');
         
         // Preload all card images
+        console.log('[REACT] Starting image preload...');
         await Promise.all(cardImages.map(image => Asset.loadAsync(image)));
+        console.log('[REACT] Image preload completed');
         
         // Hide native splash screen first
+        console.log('[REACT] Hiding splash screen...');
         await SplashScreen.hideAsync();
+        console.log('[REACT] Splash screen hidden');
         
         // Then start fade animation of our overlay
+        console.log('[REACT] Starting fade animation...');
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 1000,
           useNativeDriver: true,
         }).start();
+        console.log('[REACT] App initialization completed successfully');
       } catch (error) {
+        console.log('[REACT] [ERROR] App initialization failed:', error instanceof Error ? error.message : String(error));
+        console.log('[REACT] [ERROR] Stack:', error instanceof Error ? error.stack || 'No stack' : 'No stack');
+        
         // Still fade out smoothly on error
         if (isMounted) {
+          console.log('[REACT] Performing error recovery - hiding splash and fading...');
           await SplashScreen.hideAsync();
           Animated.timing(fadeAnim, {
             toValue: 0,
@@ -70,6 +87,7 @@ export default function RootLayout() {
 
     void initializeApp();
     return () => { 
+      console.log('[REACT] RootLayout cleanup - component unmounting');
       isMounted = false;
     };
   }, []);

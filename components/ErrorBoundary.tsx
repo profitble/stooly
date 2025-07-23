@@ -1,3 +1,4 @@
+console.log('[BOOT] FILE LOADED: components/ErrorBoundary.tsx');
 import React, { useEffect } from 'react';
 import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import * as SplashScreen from 'expo-splash-screen';
@@ -23,6 +24,12 @@ function clearMemory() {
 
 function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) {
   useEffect(() => {
+    console.log('[ERROR_BOUNDARY] Error fallback rendered');
+    console.log('[ERROR_BOUNDARY] [ERROR] Error caught:', error.message);
+    console.log('[ERROR_BOUNDARY] [ERROR] Stack:', error.stack || 'No stack trace');
+    console.log('[ERROR_BOUNDARY] [ERROR] Error name:', error.name);
+    console.log('[ERROR_BOUNDARY] [ERROR] Error cause:', error.cause || 'No cause');
+    
     void SplashScreen.hideAsync();
   }, []);
 
@@ -45,6 +52,7 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetError
         className="rounded-full px-6 py-3"
         style={{ backgroundColor: FAB_COLOR }}
         onPress={() => {
+          console.log('[ERROR_BOUNDARY] User pressed retry button');
           clearMemory();
           resetErrorBoundary();
         }}
@@ -62,7 +70,13 @@ export function ErrorBoundary({ children }: { children: React.ReactNode }) {
     <ReactErrorBoundary
       FallbackComponent={ErrorFallback}
       onReset={() => {
+        console.log('[ERROR_BOUNDARY] Error boundary reset triggered');
         // Reset app state here if needed
+      }}
+      onError={(error, errorInfo) => {
+        console.log('[ERROR_BOUNDARY] [ERROR] React Error Boundary caught error:', error.message);
+        console.log('[ERROR_BOUNDARY] [ERROR] Stack:', error.stack || 'No stack trace');
+        console.log('[ERROR_BOUNDARY] [ERROR] Component stack:', errorInfo.componentStack);
       }}
     >
       {children}
