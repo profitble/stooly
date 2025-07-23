@@ -3,7 +3,6 @@ import type { CustomerInfo, PurchasesError, PurchasesPackage, PurchasesOfferings
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { getOrCreateAppUserId } from '@/utils/userId';
 import { Platform } from 'react-native';
-import Constants from 'expo-constants';
 
 const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
@@ -37,6 +36,14 @@ class RevenueCatService {
   async initialize(): Promise<InitializationResult> {
     if (this.isInitialized) {
       return { success: true };
+    }
+
+    // Defensive check: ensure we're not initializing too early
+    if (!process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS) {
+      return {
+        success: false,
+        error: new Error('Environment not ready - RevenueCat API key not available')
+      };
     }
 
     let lastError: Error | undefined;
