@@ -46,7 +46,10 @@ config.resolver = {
   // Keep hierarchical lookup enabled for standard module resolution
   disableHierarchicalLookup: false,
   extraNodeModules: {
-    '@env': path.resolve(__dirname, '.env.production')
+    '@env': path.resolve(__dirname, '.env.production'),
+    // Force any require('react-native-reanimated') to resolve to a local stub so that
+    // libraries like react-native-gesture-handler do not attempt to load the real package.
+    'react-native-reanimated': path.resolve(__dirname, 'mocks', 'react-native-reanimated.js'),
   }
 };
 

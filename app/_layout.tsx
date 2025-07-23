@@ -3,7 +3,6 @@ import { Stack } from 'expo-router';
 import { View } from 'react-native';
 import { Animated } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
 import * as SplashScreen from 'expo-splash-screen';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { revenueCatService } from '../services/revenueCatService';
