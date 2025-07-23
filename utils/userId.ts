@@ -1,37 +1,39 @@
-console.log('[BOOT] FILE LOADED: utils/userId.ts');
+console.log('[FILE LOADED: userId.ts]');
 import * as SecureStore from 'expo-secure-store';
+console.log('[USERID_IMPORT] expo-secure-store imported');
 import 'react-native-get-random-values';
+console.log('[USERID_IMPORT] react-native-get-random-values imported');
 import { v4 as uuidv4 } from 'uuid';
+console.log('[USERID_IMPORT] uuid imported');
 
 const APP_USER_ID_KEY = 'app_user_id';
+console.log('[USERID_CONSTANT] APP_USER_ID_KEY set to:', APP_USER_ID_KEY);
 
 export async function getOrCreateAppUserId(): Promise<string> {
-  console.log('[USER_ID] Getting or creating app user ID...');
-  
+  console.log('[USERID_FUNCTION] getOrCreateAppUserId called');
   try {
-    console.log('[USER_ID] Attempting to retrieve from SecureStore...');
+    console.log('[USERID_SECURE] Attempting to get user ID from SecureStore');
     let appUserId = await SecureStore.getItemAsync(APP_USER_ID_KEY);
+    console.log('[USERID_SECURE] Existing user ID found:', !!appUserId);
     
     if (!appUserId) {
-      console.log('[USER_ID] No existing ID found, generating new UUID...');
+      console.log('[USERID_GENERATE] Generating new UUID');
       appUserId = uuidv4();
-      console.log('[USER_ID] Generated ID:', `${appUserId.substring(0, 8)}...`);
+      console.log('[USERID_GENERATE] New UUID generated:', !!appUserId);
       
-      console.log('[USER_ID] Storing in SecureStore...');
+      console.log('[USERID_SECURE] Storing new user ID in SecureStore');
       await SecureStore.setItemAsync(APP_USER_ID_KEY, appUserId);
-      console.log('[USER_ID] Successfully stored in SecureStore');
-    } else {
-      console.log('[USER_ID] Retrieved existing ID:', `${appUserId.substring(0, 8)}...`);
+      console.log('[USERID_SECURE] User ID stored successfully');
     }
     
+    console.log('[USERID_RETURN] Returning user ID:', !!appUserId);
     return appUserId;
   } catch (error) {
-    console.log('[USER_ID] [ERROR] SecureStore failed:', error instanceof Error ? error.message : String(error));
-    console.log('[USER_ID] [ERROR] Stack:', error instanceof Error ? error.stack || 'No stack' : 'No stack');
-    
+    console.error('[USERID_ERROR] SecureStore error:', error);
+    console.log('[USERID_FALLBACK] Using fallback UUID generation');
     // Fallback to generated UUID if SecureStore fails
     const fallbackId = uuidv4();
-    console.log('[USER_ID] Using fallback UUID:', `${fallbackId.substring(0, 8)}...`);
+    console.log('[USERID_FALLBACK] Fallback UUID generated:', !!fallbackId);
     return fallbackId;
   }
 }

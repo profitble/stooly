@@ -1,19 +1,25 @@
-console.log('[BOOT] FILE LOADED: services/revenueCatService.ts');
+console.log('[FILE LOADED: revenueCatService.ts]');
 import Purchases from 'react-native-purchases';
+console.log('[RC_IMPORT] Purchases imported');
 import type { CustomerInfo, PurchasesError, PurchasesPackage, PurchasesOfferings } from 'react-native-purchases';
+console.log('[RC_IMPORT] Purchases types imported');
 import AsyncStorage from '@react-native-async-storage/async-storage';
+console.log('[RC_IMPORT] AsyncStorage imported');
 import { getOrCreateAppUserId } from '@/utils/userId';
+console.log('[RC_IMPORT] getOrCreateAppUserId imported');
 import { Platform } from 'react-native';
+console.log('[RC_IMPORT] Platform imported');
 
 const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
 const MAX_RETRY_DELAY = 5000;
-
+console.log('[RC_CONSTANTS] Retry configuration loaded - attempts:', RETRY_ATTEMPTS);
 
 // RevenueCat Configuration Constants
 export const ENTITLEMENT_ID = 'stooly_unlimited';
 export const PACKAGE_ID = '$rc_weekly';
 export const OFFERING_ID = 'current';
+console.log('[RC_CONSTANTS] RevenueCat constants defined:', {ENTITLEMENT_ID, PACKAGE_ID, OFFERING_ID});
 
 interface InitializationResult {
   success: boolean;
@@ -25,29 +31,33 @@ class RevenueCatService {
   private isInitialized = false;
   private appUserId: string | null = null;
 
-  private constructor() {}
+  private constructor() {
+    console.log('[RC_CLASS] RevenueCatService constructor called');
+  }
 
   static getInstance(): RevenueCatService {
+    console.log('[RC_SINGLETON] getInstance called, exists:', !!RevenueCatService.instance);
     if (!RevenueCatService.instance) {
+      console.log('[RC_SINGLETON] Creating new RevenueCatService instance');
       RevenueCatService.instance = new RevenueCatService();
     }
     return RevenueCatService.instance;
   }
 
   async initialize(): Promise<InitializationResult> {
-    console.log('[RC] Initializing RevenueCat...');
-    
+    console.log('[RC_INIT_START] Initialize called, already initialized:', this.isInitialized);
     if (this.isInitialized) {
-      console.log('[RC] Already initialized, returning success');
+      console.log('[RC_INIT_SKIP] Already initialized, returning success');
       return { success: true };
     }
 
-    // Defensive check: ensure we're not initializing too early
-    const apiKeyIOS = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
-    console.log('[RC] API Key iOS defined:', !!apiKeyIOS, 'Length:', apiKeyIOS?.length || 0);
+    console.log('[RC_ENV] Checking environment variables');
+    console.log('[RC_ENV] process.env exists:', typeof process.env);
+    console.log('[RC_ENV] iOS key present:', !!process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS);
     
-    if (!apiKeyIOS) {
-      console.log('[RC] Environment not ready - RevenueCat API key not available');
+    // Defensive check: ensure we're not initializing too early
+    if (!process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS) {
+      console.error('[RC_ENV] RevenueCat API key not available in environment');
       return {
         success: false,
         error: new Error('Environment not ready - RevenueCat API key not available')
@@ -56,67 +66,66 @@ class RevenueCatService {
 
     let lastError: Error | undefined;
     let currentDelay = INITIAL_RETRY_DELAY;
+    console.log('[RC_RETRY] Starting retry loop, max attempts:', RETRY_ATTEMPTS);
 
     for (let attempt = 0; attempt < RETRY_ATTEMPTS; attempt++) {
-      console.log(`[RC] Attempt ${attempt + 1}/${RETRY_ATTEMPTS}`);
-      
+      console.log('[RC_ATTEMPT]', attempt + 1, 'of', RETRY_ATTEMPTS);
       try {
+        console.log('[RC_PLATFORM] Checking platform for API key');
+        console.log('[RC_PLATFORM] Platform.OS:', Platform.OS);
         const apiKey = Platform.select({
           ios: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
           default: null,
         });
-        
-        console.log('[RC] Platform:', Platform.OS, 'API Key selected:', !!apiKey);
+        console.log('[RC_PLATFORM] Selected API key exists:', !!apiKey);
 
         if (apiKey == null) {
+          console.error('[RC_PLATFORM] RevenueCat API key not configured for platform:', Platform.OS);
           throw new Error('RevenueCat API key not configured for this platform');
         }
 
-        console.log('[RC] Configuring Purchases with API key...');
+        console.log('[RC_CONFIGURE] Calling Purchases.configure with API key');
         await Purchases.configure({ apiKey });
-        console.log('[RC] Purchases configured successfully');
+        console.log('[RC_CONFIGURE] Purchases.configure completed successfully');
         
+        console.log('[RC_USER_ID] Getting or creating app user ID');
         // Generate or retrieve secure app user ID
-        console.log('[RC] Getting app user ID...');
         this.appUserId = await getOrCreateAppUserId();
-        console.log('[RC] App user ID:', this.appUserId ? `${this.appUserId.substring(0, 8)}...` : 'null');
+        console.log('[RC_USER_ID] App user ID obtained:', !!this.appUserId);
         
-        console.log('[RC] Logging in user...');
+        console.log('[RC_LOGIN] Calling Purchases.logIn');
         await Purchases.logIn(this.appUserId);
-        console.log('[RC] User logged in successfully');
+        console.log('[RC_LOGIN] Purchases.logIn completed');
         
-        console.log('[RC] Getting customer info...');
+        console.log('[RC_CUSTOMER] Getting customer info');
         await Purchases.getCustomerInfo();
-        console.log('[RC] Customer info retrieved successfully');
+        console.log('[RC_CUSTOMER] Customer info retrieved successfully');
         
+        console.log('[RC_ATTRIBUTES] Setting user attributes');
         // Set email notification preferences to opted out
-        console.log('[RC] Setting user attributes...');
-        const userName = await AsyncStorage.getItem('user_name') || '';
-        console.log('[RC] User name from storage:', userName ? `"${userName}"` : 'empty');
-        
         await Purchases.setAttributes({
           $email_notification_state: 'opted_out',
-          $displayName: userName
+          $displayName: await AsyncStorage.getItem('user_name') || ''
         });
-        console.log('[RC] User attributes set successfully');
+        console.log('[RC_ATTRIBUTES] User attributes set successfully');
         
         this.isInitialized = true;
-        console.log('[RC] RevenueCat initialization completed successfully');
+        console.log('[RC_INIT_SUCCESS] RevenueCat initialization completed successfully');
         return { success: true };
       } catch (error: unknown) {
         lastError = error instanceof Error ? error : new Error(String(error as unknown));
-        console.log(`[RC] [ERROR] Attempt ${attempt + 1} failed:`, lastError.message);
-        console.log(`[RC] [ERROR] Stack:`, lastError.stack || 'No stack trace');
+        console.error('[RC_ERROR] Attempt', attempt + 1, 'failed:', lastError.message);
         
         if (attempt < RETRY_ATTEMPTS - 1) {
-          console.log(`[RC] Retrying in ${currentDelay}ms...`);
+          console.log('[RC_RETRY] Waiting', currentDelay, 'ms before retry');
           await new Promise(resolve => setTimeout(resolve, currentDelay));
           currentDelay = Math.min(currentDelay * 2, MAX_RETRY_DELAY);
+          console.log('[RC_RETRY] Next delay will be:', Math.min(currentDelay * 2, MAX_RETRY_DELAY));
         }
       }
     }
 
-    console.log('[RC] [ERROR] All retry attempts failed, giving up');
+    console.error('[RC_INIT_FAILED] All retry attempts exhausted');
     return {
       success: false,
       error: lastError ?? new Error('Failed to initialize RevenueCat after multiple attempts')
@@ -124,32 +133,20 @@ class RevenueCatService {
   }
 
   async getOfferings(): Promise<PurchasesOfferings> {
-    console.log('[RC] Getting offerings...');
-    
     if (!this.isInitialized) {
-      console.log('[RC] Not initialized, attempting to initialize...');
       const initResult = await this.initialize();
       if (!initResult.success) {
-        console.log('[RC] [ERROR] Initialization failed in getOfferings');
         throw initResult.error;
       }
     }
 
     try {
-      console.log('[RC] Fetching offerings from RevenueCat...');
       const offerings = await Purchases.getOfferings();
-      console.log('[RC] Offerings fetched, current offering available:', !!offerings.current);
-      
       if (!offerings.current) {
-        console.log('[RC] [ERROR] No current offering available');
         throw new Error('No subscription options available');
       }
-      
-      console.log('[RC] Offerings retrieved successfully');
       return offerings;
     } catch (error) {
-      console.log('[RC] [ERROR] Failed to get offerings:', error instanceof Error ? error.message : String(error));
-      console.log('[RC] [ERROR] Stack:', error instanceof Error ? error.stack || 'No stack' : 'No stack');
       throw error;
     }
   }
@@ -220,4 +217,6 @@ class RevenueCatService {
   }
 }
 
-export const revenueCatService = RevenueCatService.getInstance(); 
+console.log('[RC_EXPORT] Creating RevenueCatService singleton instance');
+export const revenueCatService = RevenueCatService.getInstance();
+console.log('[RC_EXPORT] RevenueCatService instance exported');

@@ -1,8 +1,13 @@
-console.log('[BOOT] FILE LOADED: app.config.ts');
+console.log('[FILE LOADED: app.config.ts]');
 import type { ExpoConfig } from 'expo/config';
 
+console.log('[CONFIG_ENV] Process env loaded:', typeof process.env);
+console.log('[CONFIG_ENV] iOS RC key present:', !!process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS);
+console.log('[CONFIG_ENV] API base URL present:', !!process.env.EXPO_PUBLIC_API_BASE_URL);
+console.log('[CONFIG_ENV] Supabase key present:', !!process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY);
+
 const revenueCatApiKeyIos = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
-console.log('[CONFIG] RevenueCat API Key iOS in config:', !!revenueCatApiKeyIos, 'Length:', revenueCatApiKeyIos?.length || 0);
+console.log('[CONFIG_RC] Revenue Cat iOS key retrieved:', !!revenueCatApiKeyIos);
 
 const config: ExpoConfig = {
   name: "Stooly",
@@ -20,7 +25,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: 'com.maxta.poop',
-    buildNumber: '13',
+    buildNumber: '14',
     config: {
       usesNonExemptEncryption: false,
     },
@@ -77,5 +82,8 @@ const config: ExpoConfig = {
   },
   owner: "maxta"
 };
+
+console.log('[CONFIG_EXPORT] Config object created, extra keys:', Object.keys(config.extra || {}));
+console.log('[CONFIG_EXPORT] Exporting config with RC key:', !!config.extra?.revenueCatApiKeyIos);
 
 export default config;
