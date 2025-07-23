@@ -18,7 +18,8 @@
     "production": {
       "ios": {
         "ascApiKeyPath": "assets/credentials/AuthKey_VTYA6ANHMA.p8",
-        "ascApiKeyId": "VTYA6ANHMA"
+        "ascApiKeyId": "VTYA6ANHMA",
+        "ascAppId": "6748880087"
       }
     }
   }
