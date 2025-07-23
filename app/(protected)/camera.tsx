@@ -53,7 +53,7 @@ export default function CameraScreen() {
 
       } catch (e) {
         console.error('Failed to take picture:', e);
-        Alert.alert('Camera Issue', 'Can\'t take photo. Try again.', [{ text: 'OK' }]);
+        Alert.alert('Camera Issue', \"Can't take photo. Try again.\", [{ text: 'OK' }]);
       }
     }
   };

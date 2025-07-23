@@ -3,13 +3,13 @@ import { Alert } from 'react-native';
 
 const errorMessages: { [key: string]: string } = {
   'Missing or invalid image (base64)': 
-    'Couldn\'t use the photo – try taking it again.',
+    "Couldn't use the photo – try taking it again.",
 
   'DeepSeek API failed': 
-    'Can\'t check the photo right now – try again later.',
+    "Can't check the photo right now – try again later.",
 
   'No content returned from DeepSeek':
-    'Didn\'t get results – try a clearer photo.',
+    "Didn't get results – try a clearer photo.",
 
   'Could not extract valid JSON from response':
     'Something went wrong – try again in a bit.',
@@ -35,7 +35,7 @@ export function presentError(error: any): void {
   console.log('[ERROR_SERVICE] Mapped to friendly message:', friendlyMessage);
 
   Alert.alert(
-    'We Couldn't Check the Photo',
+    "We Couldn't Check the Photo",
     friendlyMessage,
     [{ text: 'OK' }],
     { cancelable: true }

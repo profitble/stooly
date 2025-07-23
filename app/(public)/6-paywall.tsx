@@ -61,7 +61,7 @@ export default function PaywallScreen() {
       if (hasSub) router.replace('/(protected)/home');
       else Alert.alert('Restore Purchase', 'No subscription found to restore.');
     } catch {
-      Alert.alert('Restore Purchase', 'Couldn\'t restore purchases. Please try again.');
+      Alert.alert('Restore Purchase', \"Couldn't restore purchases. Please try again.\");
     }
   };
 

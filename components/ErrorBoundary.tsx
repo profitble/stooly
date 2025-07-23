@@ -45,7 +45,7 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetError
       </Text>
       <Text className="text-base text-center mb-8" style={{ color: SECONDARY }}>
         {isSubscriptionError 
-          ? 'Couldn\'t check your subscription. Try again.'
+          ? "Couldn't check your subscription. Try again."
           : 'Please try again.'}
       </Text>
       <Pressable
