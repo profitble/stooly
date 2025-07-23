@@ -9,11 +9,7 @@ module.exports = function (api) {
     ],
     plugins: [
       ['module-resolver', {
-        root: ['.'],
-        alias: {
-          '@': '.',
-          '~': '.',
-        },
+        alias: { '@': '.', '~': '.' },
       }],
       'transform-remove-console',
     ],

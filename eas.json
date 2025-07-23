@@ -6,13 +6,9 @@
     "production": {
       "developmentClient": false,
       "distribution": "store",
-      "ios": {
-        "simulator": false,
-        "buildConfiguration": "Release"
-      },
       "env": {
         "EXPO_PUBLIC_API_BASE_URL": "https://tzgrlkathfzhcymsukji.supabase.co/functions/v1",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6Z3Jsa2F0aGZ6aGN5bXN1a2ppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTI2OTgsImV4cCI6MjA2Nzc4ODY5OH0.lESV2E1T39fw5CfeqfAlb0prW06vpaHc2fDlig9oj0U",
+        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR6Z3Jsa2F0aGZ6aGN5bXN1a2ppIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTIyMTI2OTksImV4cCI6MjA2Nzc4ODY5OH0.lESV2E1T39fw5CfeqfAlb0prW06vpaHc2fDlig9oj0U",
         "EXPO_PUBLIC_REVENUECAT_API_KEY_IOS": "appl_HOcNnvBbVzPMQbpGJNXjQLyEeQl"
       }
     }

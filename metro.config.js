@@ -4,14 +4,14 @@ const path = require('path');
 
 let config = getDefaultConfig(__dirname);
 
+// Add NativeWind support
 config = withNativeWind(config, {
   input: './global.css',
 });
 
-// Enable context modules and add asset support
+// Basic asset plugin support (already standard with Expo)
 config.transformer = {
   ...config.transformer,
-  unstable_allowRequireContext: true,
   assetPlugins: ['expo-asset/tools/hashAssetFiles'],
   getTransformOptions: async () => ({
     transform: {
@@ -19,38 +19,19 @@ config.transformer = {
       inlineRequires: false,
     },
   }),
-  environmentHash: {
-    ...config.transformer.environmentHash,
-    'EXPO_PUBLIC_': JSON.stringify(process.env.EXPO_PUBLIC_),
-  },
+  // environmentHash and EXPO_PUBLIC_ line removed as unnecessary
 };
 
-// Configure Metro resolution
+// Metro resolver tweaks
 config.resolver = {
   ...config.resolver,
-  // Prioritize CommonJS modules
-  sourceExts: [
-    'cjs.js',  // Prioritize CommonJS first
-    ...config.resolver.sourceExts,
-    'js',
-    'json',
-    'ts',
-    'tsx'
-  ],
-  // Add JSON and asset extensions
-  assetExts: [...config.resolver.assetExts, 'db', 'txt'],
-  // Configure module resolution
+  // Prioritize local node_modules (not usually needed with Expo, but harmless)
   nodeModulesPaths: [
-    path.resolve(__dirname, 'node_modules')
+    path.resolve(__dirname, 'node_modules'),
   ],
-  // Keep hierarchical lookup enabled for standard module resolution
-  disableHierarchicalLookup: false,
-  extraNodeModules: {
-    '@env': path.resolve(__dirname, '.env.production'),
-    // Force any require('react-native-reanimated') to resolve to a local stub so that
-    // libraries like react-native-gesture-handler do not attempt to load the real package.
-    'react-native-reanimated': path.resolve(__dirname, 'mocks', 'react-native-reanimated.js'),
-  }
+  // Only add extraNodeModules if you *actually* have those stubs/files
+  // Remove @env and react-native-reanimated overrides if not using custom mocks
+  // extraNodeModules: { ... }
 };
 
-module.exports = config; 
+module.exports = config;

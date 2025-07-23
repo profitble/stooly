@@ -11,13 +11,13 @@ const config: ExpoConfig = {
   splash: {
     image: "./assets/images/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#fdfdfd"
+    backgroundColor: "#fdfdfd",
   },
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
-    bundleIdentifier: 'com.maxta.poop',
-    buildNumber: '19',
+    bundleIdentifier: "com.maxta.poop",
+    buildNumber: "19",
     config: {
       usesNonExemptEncryption: false,
     },
@@ -36,10 +36,7 @@ const config: ExpoConfig = {
         "UIInterfaceOrientationPortrait",
         "UIInterfaceOrientationPortraitUpsideDown"
       ]
-    },
-    entitlements: {
-      'com.apple.InAppPurchase': true,
-    },
+    }
   },
   plugins: [
     "expo-router",
@@ -48,9 +45,9 @@ const config: ExpoConfig = {
       "expo-build-properties",
       {
         ios: {
-          useFrameworks: "dynamic",
           deploymentTarget: "15.1",
-          hermesEnabled: true,
+          useFrameworks: "static",
+          enableHermes: true,
           newArchEnabled: false,
         },
       }
@@ -58,20 +55,10 @@ const config: ExpoConfig = {
   ],
   scheme: "poop",
   platforms: ["ios"],
-  web: {
-    bundler: "metro"
-  },
-  experiments: {
-    tsconfigPaths: true
-  },
   extra: {
-    router: {
-      origin: false
-    },
     eas: {
       projectId: "9fbde21a-d8f9-4afe-bb34-c7d05e7690ce"
     },
-    gluestackUIConfigPath: "./styles/gluestack-ui.config.ts",
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
     revenueCatApiKeyIos,

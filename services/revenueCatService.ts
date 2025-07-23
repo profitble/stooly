@@ -67,7 +67,7 @@ class RevenueCatService {
         
         await Purchases.logIn(this.appUserId);
         
-        await Purchases.getCustomerInfo();
+        await Purchases.getCustomerInfo({ forceRefresh: true });
         
         // Set email notification preferences to opted out
         await Purchases.setAttributes({
@@ -120,7 +120,7 @@ class RevenueCatService {
       }
     }
 
-    return Purchases.getCustomerInfo();
+    return Purchases.getCustomerInfo({ forceRefresh: true });
   }
 
   async purchasePackage(packageIdentifier: string): Promise<CustomerInfo> {
