@@ -54,12 +54,12 @@ export default function AgeRangeScreen() {
               accessibilityRole="button"
               accessibilityLabel={item.title}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              className={selected ? 'w-full rounded-2xl justify-center items-start mb-5 px-5 py-[22px] bg-black' : 'w-full rounded-2xl justify-center items-start mb-5 px-5 py-[22px] bg-white'}
+              className={`w-full rounded-2xl justify-center items-start mb-5 px-5 py-[22px] ${selected ? 'bg-black' : 'bg-white'}`}
             >
-              <Text className={selected ? 'text-xl font-medium text-white' : 'text-xl font-medium text-[#111]'}>
+              <Text className={`text-xl font-medium ${selected ? 'text-white' : 'text-[#111]'}`}>
                 {item.title}
               </Text>
-              <Text className={selected ? 'mt-1 font-medium text-gray-200' : 'mt-1 font-medium text-gray-500'}>
+              <Text className={`mt-1 font-medium ${selected ? 'text-gray-200' : 'text-gray-500'}`}>
                 {item.desc}
               </Text>
             </Pressable>
@@ -74,7 +74,7 @@ export default function AgeRangeScreen() {
       >
         <Pressable
           disabled={!ageRange}
-          className={ageRange ? 'w-full h-[60px] rounded-full justify-center items-center bg-black' : 'w-full h-[60px] rounded-full justify-center items-center bg-[#b2b2b4]'}
+          className={`w-full h-[60px] rounded-full justify-center items-center ${ageRange ? 'bg-black' : 'bg-[#b2b2b4]'}`}
           onPress={() => router.push('/(public)/4-size')}
           accessibilityRole="button"
           accessibilityLabel="Next"

@@ -97,7 +97,7 @@ export default function HeightWeightScreen() {
 
       {/* Unit switch */}
       <View className="w-[320px] self-center flex-row items-center justify-between mt-[60px] mb-6">
-          <Text className={!metric ? 'text-[22px] font-medium px-8 text-center text-[#111]' : 'text-[22px] font-medium px-8 text-center text-[#d5d5d7]'}>Imperial</Text>
+          <Text className={`text-[22px] font-medium px-8 text-center ${!metric ? 'text-[#111]' : 'text-[#d5d5d7]'}`}>Imperial</Text>
           <Switch
             value={metric}
             onValueChange={useCallback(() => {
@@ -138,7 +138,7 @@ export default function HeightWeightScreen() {
             thumbColor="#ffffff"
             ios_backgroundColor="#090909"
           />
-          <Text className={metric ? 'text-[22px] font-medium px-8 text-center text-[#111]' : 'text-[22px] font-medium px-8 text-center text-[#d5d5d7]'}>Metric</Text>
+          <Text className={`text-[22px] font-medium px-8 text-center ${metric ? 'text-[#111]' : 'text-[#d5d5d7]'}`}>Metric</Text>
         </View>
 
       {/* Pickers */}

@@ -72,7 +72,7 @@ export default function WaterIntakeScreen() {
           return (
             <Pressable
               key={opt.value}
-              className={selected ? 'w-full rounded-2xl px-5 py-[22px] mb-5 bg-black' : 'w-full rounded-2xl px-5 py-[22px] mb-5 bg-white'}
+              className={`w-full rounded-2xl px-5 py-[22px] mb-5 ${selected ? 'bg-black' : 'bg-white'}`}
               onPress={() => setWaterIntake(opt.value)}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
             >
@@ -81,10 +81,10 @@ export default function WaterIntakeScreen() {
                   {opt.icon()}
                 </View>
                 <View className="ml-4">
-                  <Text className={selected ? 'text-xl font-medium text-white' : 'text-xl font-medium text-[#111]'}>
+                  <Text className={`text-xl font-medium ${selected ? 'text-white' : 'text-[#111]'}`}>
                     {opt.title}
                   </Text>
-                  <Text className={selected ? 'mt-1 font-medium text-gray-200' : 'mt-1 font-medium text-gray-500'}>
+                  <Text className={`mt-1 font-medium ${selected ? 'text-gray-200' : 'text-gray-500'}`}>
                     {opt.desc}
                   </Text>
                 </View>
@@ -101,7 +101,7 @@ export default function WaterIntakeScreen() {
       >
         <Pressable
           disabled={!waterIntake}
-          className={waterIntake ? 'w-full h-[60px] rounded-full justify-center items-center bg-black' : 'w-full h-[60px] rounded-full justify-center items-center bg-[#b2b2b4]'}
+          className={`w-full h-[60px] rounded-full justify-center items-center ${waterIntake ? 'bg-black' : 'bg-[#b2b2b4]'}`}
           onPress={() => router.push('/(public)/6-paywall')}
         >
           <Text className="text-white font-medium text-xl">Next</Text>

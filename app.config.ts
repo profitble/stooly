@@ -46,7 +46,7 @@ const config: ExpoConfig = {
           useFrameworks: "static",
           enableHermes: true,
           newArchEnabled: false,
-          hermesFlags: ["-O"]
+          hermesFlags: ["-O", "-shrink-level=2"]
         }
       }
     ]
