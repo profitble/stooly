@@ -3,6 +3,7 @@ import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary';
 import * as SplashScreen from 'expo-splash-screen';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { View as RNView, Text as RNText, Pressable as RNPressable } from 'react-native';
+import * as Sentry from '@sentry/react-native';
 
 const View = RNView as any;
 const Text = RNText as any;
@@ -79,6 +80,15 @@ export function ErrorBoundary({ children }: { children: React.ReactNode }) {
           // Log errors but don't crash the app
           console.warn('Error caught by boundary:', error.message);
           console.warn('Error info:', errorInfo);
+          
+          // Send to Sentry for TestFlight debugging
+          Sentry.captureException(error, {
+            contexts: {
+              react: {
+                componentStack: errorInfo.componentStack
+              }
+            }
+          });
         } catch (e) {
           // Ignore logging errors
         }

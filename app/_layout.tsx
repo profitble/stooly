@@ -7,11 +7,17 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { revenueCatService } from '../services/revenueCatService';
 import { Asset } from 'expo-asset';
+import * as Sentry from '@sentry/react-native';
 import 'react-native-reanimated';
 import '../global.css';
 
 // Keep splash screen visible while loading fonts
 void SplashScreen.preventAutoHideAsync();
+
+// Initialize Sentry
+Sentry.init({
+  dsn: 'https://16f4bb8d3cb24372d4412446665085e0@o4509722657816576.ingest.us.sentry.io/4509722658603008',
+});
 
 // Array of images to preload
 const cardImages = [

@@ -18,7 +18,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.maxta.poop",
-    buildNumber: "26",
+    buildNumber: "27",
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
@@ -38,6 +38,13 @@ const config: ExpoConfig = {
   plugins: [
     "expo-router",
     "./plugins/withReactNativePurchases",
+    [
+      "@sentry/react-native/expo",
+      {
+        organization: "stooly",
+        project: "react-native"
+      }
+    ],
     [
       "expo-build-properties",
       {
