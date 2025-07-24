@@ -54,7 +54,7 @@ export default function Index() {
     );
   }
 
-  if (isSubscribed) {
+  if (isSubscribed === true) {
     return <Redirect href="/(protected)/home" />;
   }
 
