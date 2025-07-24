@@ -8,10 +8,8 @@ const RETRY_ATTEMPTS = 3;
 const INITIAL_RETRY_DELAY = 1000;
 const MAX_RETRY_DELAY = 5000;
 
-// RevenueCat Configuration Constants
 export const ENTITLEMENT_ID = 'stooly_unlimited';
 export const PACKAGE_ID = '$rc_weekly';
-export const OFFERING_ID = 'current';
 
 interface InitializationResult {
   success: boolean;
@@ -67,7 +65,7 @@ class RevenueCatService {
         
         await Purchases.logIn(this.appUserId);
         
-        await Purchases.getCustomerInfo({ forceRefresh: true });
+        await Purchases.getCustomerInfo();
         
         // Set email notification preferences to opted out
         await Purchases.setAttributes({
@@ -120,7 +118,7 @@ class RevenueCatService {
       }
     }
 
-    return Purchases.getCustomerInfo({ forceRefresh: true });
+    return Purchases.getCustomerInfo();
   }
 
   async purchasePackage(packageIdentifier: string): Promise<CustomerInfo> {

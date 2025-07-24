@@ -12,6 +12,7 @@ module.exports = function (api) {
         alias: { '@': '.', '~': '.' },
       }],
       'transform-remove-console',
+      'react-native-reanimated/plugin',
     ],
   };
 };

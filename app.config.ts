@@ -17,7 +17,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.maxta.poop",
-    buildNumber: "19",
+    buildNumber: "20",
     config: {
       usesNonExemptEncryption: false,
     },

@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import { ErrorBoundary } from '../components/ErrorBoundary';
 import { revenueCatService } from '../services/revenueCatService';
 import { Asset } from 'expo-asset';
+import 'react-native-reanimated';
 import '../global.css';
 
 // Keep splash screen visible while loading fonts
