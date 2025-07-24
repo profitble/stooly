@@ -1,4 +1,5 @@
 import type { ExpoConfig } from 'expo/config';
+
 const revenueCatApiKeyIos = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
 
 const config: ExpoConfig = {
@@ -11,22 +12,19 @@ const config: ExpoConfig = {
   splash: {
     image: "./assets/images/splash.png",
     resizeMode: "contain",
-    backgroundColor: "#fdfdfd",
+    backgroundColor: "#fdfdfd"
   },
   assetBundlePatterns: ["**/*"],
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.maxta.poop",
-    buildNumber: "20",
-    config: {
-      usesNonExemptEncryption: false,
-    },
+    buildNumber: "21",
     infoPlist: {
-      UIBackgroundModes: ["remote-notification", "fetch"],
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
       SKPaymentTransactions: true,
       NSCameraUsageDescription: "We use the camera to let you take photos inside the app.",
+      // No notifications used
       UIRequiresFullScreen: false,
       UISupportedInterfaceOrientations: [
         "UIInterfaceOrientationPortrait",
@@ -40,8 +38,6 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
-    "expo-asset",
-    "expo-secure-store",
     "./plugins/withReactNativePurchases",
     [
       "expo-build-properties",
@@ -51,19 +47,18 @@ const config: ExpoConfig = {
           useFrameworks: "static",
           enableHermes: true,
           newArchEnabled: false,
-        },
+          hermesFlags: ["-O", "-shrink-level=2"]
+        }
       }
     ]
   ],
   scheme: "poop",
   platforms: ["ios"],
   extra: {
-    eas: {
-      projectId: "9fbde21a-d8f9-4afe-bb34-c7d05e7690ce"
-    },
+    eas: { projectId: "9fbde21a-d8f9-4afe-bb34-c7d05e7690ce" },
     apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
     supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
-    revenueCatApiKeyIos,
+    revenueCatApiKeyIos
   },
   owner: "maxta"
 };
