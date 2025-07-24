@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Redirect } from 'expo-router';
 import { revenueCatService, ENTITLEMENT_ID } from '@/services/revenueCatService';
+import Purchases from 'react-native-purchases';
 
 export default function Index() {
   const [isLoading, setIsLoading] = useState(true);
@@ -18,6 +19,7 @@ export default function Index() {
 
     async function checkSubscription() {
       try {
+        await Purchases.invalidateCustomerInfoCache();
         const customerInfo = await revenueCatService.getCustomerInfo();
         if (isMounted) {
           const hasActiveSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;

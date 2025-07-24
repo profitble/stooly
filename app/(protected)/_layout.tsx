@@ -7,6 +7,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
 import { View as RNView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Purchases from 'react-native-purchases';
 
 export const unstable_settings = {
   initialRouteName: 'home',
@@ -27,6 +28,7 @@ function ProtectedRoutes() {
     
     async function checkSubscription() {
       try {
+        await Purchases.invalidateCustomerInfoCache();
         const customerInfo = await revenueCatService.getCustomerInfo();
         const hasActiveSubscription = customerInfo?.entitlements?.active?.[ENTITLEMENT_ID]?.isActive === true;
         
