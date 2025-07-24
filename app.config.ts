@@ -24,7 +24,6 @@ const config: ExpoConfig = {
       ITSAppUsesNonExemptEncryption: false,
       SKPaymentTransactions: true,
       NSCameraUsageDescription: "We use the camera to let you take photos inside the app.",
-      // No notifications used
       UIRequiresFullScreen: false,
       UISupportedInterfaceOrientations: [
         "UIInterfaceOrientationPortrait",
@@ -47,7 +46,13 @@ const config: ExpoConfig = {
           useFrameworks: "static",
           enableHermes: true,
           newArchEnabled: false,
-          hermesFlags: ["-O", "-shrink-level=2"]
+          hermesFlags: ["-O", "-shrink-level=2"],
+          extraConfig: {
+            JSC_gcMaxHeapSize: "2048m",
+            JSC_useJIT: true,
+            JSC_useDFGJIT: true,
+            JSC_useFTLJIT: true
+          }
         }
       }
     ]
