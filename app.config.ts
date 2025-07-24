@@ -18,7 +18,7 @@ const config: ExpoConfig = {
   ios: {
     supportsTablet: true,
     bundleIdentifier: "com.maxta.poop",
-    buildNumber: "21",
+    buildNumber: "22",
     infoPlist: {
       CFBundleAllowMixedLocalizations: true,
       ITSAppUsesNonExemptEncryption: false,
@@ -46,13 +46,7 @@ const config: ExpoConfig = {
           useFrameworks: "static",
           enableHermes: true,
           newArchEnabled: false,
-          hermesFlags: ["-O", "-shrink-level=2"],
-          extraConfig: {
-            JSC_gcMaxHeapSize: "2048m",
-            JSC_useJIT: true,
-            JSC_useDFGJIT: true,
-            JSC_useFTLJIT: true
-          }
+          hermesFlags: ["-O"]
         }
       }
     ]

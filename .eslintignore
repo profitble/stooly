@@ -43,3 +43,6 @@ __tests__/
 # Metro bundler
 .metro-health-check*
 metro-cache/
+
+# Nativewind
+tailwind.config.js

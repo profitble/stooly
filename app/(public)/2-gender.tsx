@@ -53,9 +53,9 @@ export default function ReviewScreen() {
               accessibilityRole="button"
               accessibilityLabel={label}
               hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-              className={`w-full h-[60px] rounded-xl justify-center items-center mb-5 ${selected ? 'bg-black' : 'bg-white'}`}
+              className={selected ? 'w-full h-[60px] rounded-xl justify-center items-center mb-5 bg-black' : 'w-full h-[60px] rounded-xl justify-center items-center mb-5 bg-white'}
             >
-              <Text className={`text-xl font-medium ${selected ? 'text-white' : 'text-[#111]'}`}>
+              <Text className={selected ? 'text-xl font-medium text-white' : 'text-xl font-medium text-[#111]'}>
                 {label}
               </Text>
             </Pressable>
@@ -73,7 +73,7 @@ export default function ReviewScreen() {
           onPress={() => router.push('/(public)/3-age')}
           accessibilityRole="button"
           accessibilityLabel="Next"
-          className={`w-full h-[60px] rounded-full justify-center items-center ${gender ? 'bg-black' : 'bg-[#b2b2b4]'}`}
+          className={gender ? 'w-full h-[60px] rounded-full justify-center items-center bg-black' : 'w-full h-[60px] rounded-full justify-center items-center bg-[#b2b2b4]'}
         >
           <Text className="text-white font-medium text-xl">Next</Text>
         </Pressable>

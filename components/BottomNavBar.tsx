@@ -65,7 +65,7 @@ export const BottomNavBar: React.FC<BottomNavBarProps> = ({ activeScreen }) => {
                 color={isActive ? ACTIVE_COLOR : INACTIVE_COLOR}
               />
             )}
-            <T className={`${isActive ? 'text-[#111]' : 'text-gray-400'} text-xs mt-1 font-medium`}>
+            <T className={isActive ? 'text-[#111] text-xs mt-1 font-medium' : 'text-gray-400 text-xs mt-1 font-medium'}>
               {item.label}
             </T>
           </TO>
