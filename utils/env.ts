@@ -7,12 +7,19 @@ const envSchema = z.object({
 });
 
 export const validateAndGetEnv = () => {
-  const result = envSchema.safeParse(process.env);
-  
-  if (result.success) {
-    return result.data;
+  const env = {
+    EXPO_PUBLIC_API_BASE_URL: process.env.EXPO_PUBLIC_API_BASE_URL,
+    EXPO_PUBLIC_SUPABASE_ANON_KEY: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+    EXPO_PUBLIC_REVENUECAT_API_KEY_IOS: process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS,
+  };
+
+  if (__DEV__) {
+    const result = envSchema.safeParse(env);
+    if (!result.success) {
+      const errorMessage = `Environment validation failed: ${result.error.errors.map(e => e.message).join(', ')}`;
+      throw new Error(errorMessage);
+    }
   }
   
-  const errorMessage = `Environment validation failed: ${result.error.errors.map(e => e.message).join(', ')}`;
-  throw new Error(errorMessage);
+  return env;
 }; 
