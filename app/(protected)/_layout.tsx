@@ -28,9 +28,7 @@ function ProtectedRoutes() {
     
     async function checkSubscription() {
       try {
-        await Purchases.invalidateCustomerInfoCache();
-        const customerInfo = await revenueCatService.getCustomerInfo();
-        const hasActiveSubscription = customerInfo?.entitlements?.active?.[ENTITLEMENT_ID]?.isActive === true;
+        const hasActiveSubscription = await revenueCatService.isSubscribed();
         
         if (isMounted) {
           setIsSubscribed(hasActiveSubscription);

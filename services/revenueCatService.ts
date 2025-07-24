@@ -20,6 +20,7 @@ class RevenueCatService {
   private static instance: RevenueCatService;
   private isInitialized = false;
   private appUserId: string | null = null;
+  private activeSubscriptionCheck: Promise<boolean> | null = null;
 
   private constructor() {
   }
@@ -167,7 +168,25 @@ class RevenueCatService {
 
 
   async isSubscribed(): Promise<boolean> {
+    // If check is already in progress, return the same promise
+    if (this.activeSubscriptionCheck) {
+      return this.activeSubscriptionCheck;
+    }
+
+    // Start new check
+    this.activeSubscriptionCheck = this.performSubscriptionCheck();
+    
     try {
+      const result = await this.activeSubscriptionCheck;
+      return result;
+    } finally {
+      this.activeSubscriptionCheck = null;
+    }
+  }
+
+  private async performSubscriptionCheck(): Promise<boolean> {
+    try {
+      await Purchases.invalidateCustomerInfoCache();
       const customerInfo = await this.getCustomerInfo();
       return customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
     } catch (error) {

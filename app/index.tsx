@@ -19,10 +19,8 @@ export default function Index() {
 
     async function checkSubscription() {
       try {
-        await Purchases.invalidateCustomerInfoCache();
-        const customerInfo = await revenueCatService.getCustomerInfo();
+        const hasActiveSubscription = await revenueCatService.isSubscribed();
         if (isMounted) {
-          const hasActiveSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
           setIsSubscribed(hasActiveSubscription);
         }
       } catch (error) {
