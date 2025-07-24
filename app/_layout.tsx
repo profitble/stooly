@@ -37,14 +37,20 @@ export default function RootLayout() {
     
     async function initializeApp() {
       try {
-        // Start RevenueCat initialization immediately
+        // Try RevenueCat initialization but don't throw on failure
         const initResult = await revenueCatService.initialize();
         if (!initResult.success) {
-          throw initResult.error;
+          console.warn('RevenueCat initialization failed:', initResult.error?.message);
         }
         
-        // Preload all card images
-        await Promise.all(cardImages.map(image => Asset.loadAsync(image)));
+        // Serialize asset loading to prevent concurrent crashes
+        for (const image of cardImages) {
+          try {
+            await Asset.loadAsync(image);
+          } catch (error) {
+            console.warn('Failed to load asset:', error);
+          }
+        }
         
         // Hide native splash screen first
         await SplashScreen.hideAsync();

@@ -61,8 +61,14 @@ export function ErrorBoundary({ children }: { children: React.ReactNode }) {
   return (
     <ReactErrorBoundary
       FallbackComponent={ErrorFallback}
+      onError={(error, errorInfo) => {
+        // Log errors but don't crash the app
+        console.warn('Error caught by boundary:', error.message);
+        console.warn('Error info:', errorInfo);
+      }}
       onReset={() => {
         // Reset app state here if needed
+        clearMemory();
       }}
     >
       {children}
