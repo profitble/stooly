@@ -23,14 +23,14 @@ export default function PaywallScreen() {
   const setupPurchases = useCallback(async () => {
     try {
       const customerInfo = await revenueCatService.getCustomerInfo();
-      if (customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive) {
+      if (customerInfo?.entitlements?.active?.[ENTITLEMENT_ID]?.isActive) {
         router.replace('/(protected)/home');
         return;
       }
       const offerings = await revenueCatService.getOfferings();
-      if (!offerings.current) throw new Error('No subscription options available');
+      if (!offerings?.current) throw new Error('No subscription options available');
     } catch (error: unknown) {
-      Alert.alert('Subscription Error', 'Setting up subscriptions. Please try again soon.');
+      console.warn('Paywall setup failed:', error);
     }
   }, [router]);
 

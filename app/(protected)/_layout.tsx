@@ -28,7 +28,7 @@ function ProtectedRoutes() {
     async function checkSubscription() {
       try {
         const customerInfo = await revenueCatService.getCustomerInfo();
-        const hasActiveSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
+        const hasActiveSubscription = customerInfo?.entitlements?.active?.[ENTITLEMENT_ID]?.isActive === true;
         
         if (isMounted) {
           setIsSubscribed(hasActiveSubscription);
@@ -38,6 +38,7 @@ function ProtectedRoutes() {
           }
         }
       } catch (error) {
+        console.warn('Subscription check failed:', error);
         if (isMounted) {
           setIsSubscribed(false);
           router.replace('/(public)/6-paywall');

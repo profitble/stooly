@@ -38,9 +38,13 @@ export default function RootLayout() {
     async function initializeApp() {
       try {
         // Try RevenueCat initialization but don't throw on failure
-        const initResult = await revenueCatService.initialize();
-        if (!initResult.success) {
-          console.warn('RevenueCat initialization failed:', initResult.error?.message);
+        try {
+          const initResult = await revenueCatService.initialize();
+          if (!initResult.success) {
+            console.warn('RevenueCat initialization failed:', initResult.error?.message);
+          }
+        } catch (rcError) {
+          console.warn('RevenueCat failed to initialize:', rcError);
         }
         
         // Serialize asset loading to prevent concurrent crashes

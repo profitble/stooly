@@ -1,6 +1,6 @@
 import type { ExpoConfig } from 'expo/config';
 
-const revenueCatApiKeyIos = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS;
+const revenueCatApiKeyIos = process.env.EXPO_PUBLIC_REVENUECAT_API_KEY_IOS || '';
 
 const config: ExpoConfig = {
   name: "Stooly",
@@ -55,8 +55,8 @@ const config: ExpoConfig = {
   platforms: ["ios"],
   extra: {
     eas: { projectId: "9fbde21a-d8f9-4afe-bb34-c7d05e7690ce" },
-    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL,
-    supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY,
+    apiBaseUrl: process.env.EXPO_PUBLIC_API_BASE_URL || '',
+    supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY || '',
     revenueCatApiKeyIos
   },
   owner: "maxta"
