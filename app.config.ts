@@ -40,6 +40,8 @@ const config: ExpoConfig = {
   },
   plugins: [
     "expo-router",
+    "expo-asset",
+    "expo-secure-store",
     "./plugins/withReactNativePurchases",
     [
       "expo-build-properties",
