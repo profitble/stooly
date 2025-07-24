@@ -8,19 +8,40 @@ export default function Index() {
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    const timeoutId = setTimeout(() => {
+      if (isMounted) {
+        setIsSubscribed(false);
+        setIsLoading(false);
+      }
+    }, 10000); // 10 second timeout
+
     async function checkSubscription() {
       try {
         const customerInfo = await revenueCatService.getCustomerInfo();
-        const hasActiveSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
-        setIsSubscribed(hasActiveSubscription);
+        if (isMounted) {
+          const hasActiveSubscription = customerInfo.entitlements.active[ENTITLEMENT_ID]?.isActive === true;
+          setIsSubscribed(hasActiveSubscription);
+        }
       } catch (error) {
-        setIsSubscribed(false);
+        if (isMounted) {
+          console.warn('Subscription check failed, defaulting to free:', error);
+          setIsSubscribed(false);
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          clearTimeout(timeoutId);
+          setIsLoading(false);
+        }
       }
     }
 
     void checkSubscription();
+    
+    return () => {
+      isMounted = false;
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   if (isLoading) {

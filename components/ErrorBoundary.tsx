@@ -23,12 +23,28 @@ function clearMemory() {
 
 function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetErrorBoundary: () => void }) {
   useEffect(() => {
-    void SplashScreen.hideAsync();
+    try {
+      void SplashScreen.hideAsync();
+    } catch (e) {
+      // Ignore splash screen errors
+    }
   }, []);
 
   const isSubscriptionError = error.message.includes('subscription') || 
                             error.message.includes('entitlement') ||
                             error.message.includes('RevenueCat');
+
+  const handleReset = () => {
+    try {
+      clearMemory();
+      resetErrorBoundary();
+    } catch (e) {
+      // Force reload by throwing again after delay
+      setTimeout(() => {
+        throw new Error('Force reload');
+      }, 100);
+    }
+  };
 
   return (
     <View className="flex-1 items-center justify-center px-6" style={{ backgroundColor: BG }}>
@@ -44,10 +60,7 @@ function ErrorFallback({ error, resetErrorBoundary }: { error: Error, resetError
       <Pressable
         className="rounded-full px-6 py-3"
         style={{ backgroundColor: FAB_COLOR }}
-        onPress={() => {
-          clearMemory();
-          resetErrorBoundary();
-        }}
+        onPress={handleReset}
       >
         <Text className="text-white font-medium text-base">
           Try Again
@@ -62,13 +75,21 @@ export function ErrorBoundary({ children }: { children: React.ReactNode }) {
     <ReactErrorBoundary
       FallbackComponent={ErrorFallback}
       onError={(error, errorInfo) => {
-        // Log errors but don't crash the app
-        console.warn('Error caught by boundary:', error.message);
-        console.warn('Error info:', errorInfo);
+        try {
+          // Log errors but don't crash the app
+          console.warn('Error caught by boundary:', error.message);
+          console.warn('Error info:', errorInfo);
+        } catch (e) {
+          // Ignore logging errors
+        }
       }}
       onReset={() => {
-        // Reset app state here if needed
-        clearMemory();
+        try {
+          // Reset app state here if needed
+          clearMemory();
+        } catch (e) {
+          // Ignore reset errors
+        }
       }}
     >
       {children}
