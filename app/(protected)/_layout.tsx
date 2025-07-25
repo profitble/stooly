@@ -1,89 +1,66 @@
-import { Stack } from 'expo-router';
+import { Stack, useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
-import { useRouter } from 'expo-router';
-import { BackHandler, View as RNView, ActivityIndicator, AppState } from 'react-native';
+import { View as RNView, AppState, BackHandler } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { revenueCatService } from '@/services/revenueCatService';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 export const unstable_settings = {
   initialRouteName: 'home',
 };
 
-function ProtectedRoutes() {
+function ProtectedLayoutInner() {
   const router = useRouter();
   const [subscriptionState, setSubscriptionState] = useState<'checking' | 'valid' | 'invalid'>('checking');
 
   useEffect(() => {
-    let isCancelled = false;
+    let cancelled = false;
 
-    const verifyAccess = async () => {
+    const check = async () => {
       try {
-        // Force fresh check by invalidating cache first
         await revenueCatService.invalidateCache();
-        const ok = await revenueCatService.isSubscribed();
-        
-        if (!isCancelled) {
-          if (ok) {
-            setSubscriptionState('valid');
-          } else {
+        const isSubscribed = await revenueCatService.isSubscribed();
+        if (!cancelled) {
+          if (isSubscribed) setSubscriptionState('valid');
+          else {
             setSubscriptionState('invalid');
-            router.replace('/(public)/6-paywall');
+            router.replace('/(public)/1-start');
           }
         }
-      } catch (e) {
-        console.warn('Subscription check failed:', e);
-        if (!isCancelled) {
-          // Fail closed - treat errors as invalid subscription
+      } catch {
+        if (!cancelled) {
           setSubscriptionState('invalid');
-          router.replace('/(public)/6-paywall');
+          router.replace('/(public)/1-start');
         }
       }
     };
 
-    // Initial check
-    void verifyAccess();
+    void check(); // ✅ mark as intentionally unawaited
 
-    // Re-validate when app returns to foreground
-    const appStateSub = AppState.addEventListener('change', (state) => {
-      if (state === 'active') {
-        void verifyAccess();
-      }
+    const appListener = AppState.addEventListener('change', (s) => {
+      if (s === 'active') void check(); // ✅ also void here
     });
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
-    return () => {
-      isCancelled = true;
-      backHandler.remove();
-      appStateSub.remove();
-    };
-  }, [router]);
+    const back = BackHandler.addEventListener('hardwareBackPress', () => true);
 
-  // Block ALL rendering until validation completes
-  if (subscriptionState !== 'valid') {
-    return (
-      <RNView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fdfdfd' }}>
-        <ActivityIndicator size="large" color="#a26235" />
-      </RNView>
-    );
-  }
+    return () => {
+      cancelled = true;
+      appListener.remove();
+      back.remove();
+    };
+  }, [router]); // ✅ include router dependency
+
+  // While checking or invalid we render nothing – splash screen has already handled UX.
+  if (subscriptionState !== 'valid') return null;
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fdfdfd' }}>
       <Header />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          animation: 'none', // ✅ no transitions
-        }}
-      >
+      <Stack screenOptions={{ headerShown: false, animation: 'none' }}>
         <Stack.Screen
           name="camera"
-          options={{
-            presentation: 'modal',
-            animation: 'slide_from_bottom', // ✅ explicit override
-          }}
+          options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
         />
       </Stack>
     </SafeAreaView>
@@ -93,7 +70,7 @@ function ProtectedRoutes() {
 export default function ProtectedLayout() {
   return (
     <ErrorBoundary>
-      <ProtectedRoutes />
+      <ProtectedLayoutInner />
     </ErrorBoundary>
   );
 }

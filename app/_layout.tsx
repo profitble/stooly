@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
 import { Animated } from 'react-native';
@@ -36,6 +37,7 @@ const cardImages = [
 ];
 
 export default function RootLayout() {
+  const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
@@ -51,6 +53,19 @@ export default function RootLayout() {
           }
         } catch (rcError) {
           console.warn('RevenueCat failed to initialize:', rcError);
+        }
+
+        // --- Decide navigation while splash screen is still visible ---
+        try {
+          const paid = await revenueCatService.isSubscribed();
+          if (paid) {
+            router.replace('/(protected)/home');
+          } else {
+            // Ensure unpaid users start from onboarding start screen
+            router.replace('/(public)/1-start');
+          }
+        } catch (subErr) {
+          console.warn('Subscription check error:', subErr);
         }
         
         // Serialize asset loading to prevent concurrent crashes
