@@ -1,7 +1,7 @@
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { BackHandler, View as RNView, ActivityIndicator } from 'react-native';
+import { BackHandler, View as RNView, ActivityIndicator, AppState } from 'react-native';
 import { revenueCatService } from '@/services/revenueCatService';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
@@ -18,7 +18,7 @@ function ProtectedRoutes() {
   useEffect(() => {
     let isCancelled = false;
 
-    async function verifyAccess() {
+    const verifyAccess = async () => {
       try {
         // Force fresh check by invalidating cache first
         await revenueCatService.invalidateCache();
@@ -40,14 +40,23 @@ function ProtectedRoutes() {
           router.replace('/(public)/6-paywall');
         }
       }
-    }
+    };
 
+    // Initial check
     void verifyAccess();
+
+    // Re-validate when app returns to foreground
+    const appStateSub = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        void verifyAccess();
+      }
+    });
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
     return () => {
       isCancelled = true;
       backHandler.remove();
+      appStateSub.remove();
     };
   }, [router]);
 
