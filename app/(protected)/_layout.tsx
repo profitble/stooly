@@ -13,24 +13,30 @@ export const unstable_settings = {
 
 function ProtectedRoutes() {
   const router = useRouter();
-  const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
+  const [subscriptionState, setSubscriptionState] = useState<'checking' | 'valid' | 'invalid'>('checking');
 
   useEffect(() => {
-    let isMounted = true;
+    let isCancelled = false;
 
     async function verifyAccess() {
       try {
+        // Force fresh check by invalidating cache first
+        await revenueCatService.invalidateCache();
         const ok = await revenueCatService.isSubscribed();
-        if (isMounted) {
-          if (!ok) {
-            router.replace('/(public)/6-paywall');
+        
+        if (!isCancelled) {
+          if (ok) {
+            setSubscriptionState('valid');
           } else {
-            setIsSubscribed(true);
+            setSubscriptionState('invalid');
+            router.replace('/(public)/6-paywall');
           }
         }
       } catch (e) {
         console.warn('Subscription check failed:', e);
-        if (isMounted) {
+        if (!isCancelled) {
+          // Fail closed - treat errors as invalid subscription
+          setSubscriptionState('invalid');
           router.replace('/(public)/6-paywall');
         }
       }
@@ -40,12 +46,13 @@ function ProtectedRoutes() {
 
     const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
     return () => {
-      isMounted = false;
+      isCancelled = true;
       backHandler.remove();
     };
   }, [router]);
 
-  if (isSubscribed === null) {
+  // Block ALL rendering until validation completes
+  if (subscriptionState !== 'valid') {
     return (
       <RNView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fdfdfd' }}>
         <ActivityIndicator size="large" color="#a26235" />

@@ -42,7 +42,7 @@ export default function CameraScreen() {
         });
 
         const compressedImage = await manipulateAsync(
-          photo.uri,
+          photo?.uri ?? '',
           [{ resize: { width: 800 } }], // Resize to a reasonable width
           {
             compress: 0.7,

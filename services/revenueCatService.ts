@@ -109,6 +109,11 @@ class RevenueCatService {
     return Purchases.restorePurchases();
   }
 
+  async invalidateCache(): Promise<void> {
+    await this.ensureInitialized();
+    await Purchases.invalidateCustomerInfoCache();
+  }
+
   async isSubscribed(): Promise<boolean> {
     if (this.activeSubscriptionCheck) return this.activeSubscriptionCheck;
 
