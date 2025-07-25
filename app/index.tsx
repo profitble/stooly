@@ -1,21 +1,14 @@
 import { useEffect, useState } from 'react';
-import { View, ActivityIndicator } from 'react-native';
+import { View, ActivityIndicator, AppState } from 'react-native';
 import { Redirect } from 'expo-router';
 import { revenueCatService, ENTITLEMENT_ID } from '@/services/revenueCatService';
 import Purchases from 'react-native-purchases';
 
 export default function Index() {
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
 
   useEffect(() => {
     let isMounted = true;
-    const timeoutId = setTimeout(() => {
-      if (isMounted) {
-        setIsSubscribed(false);
-        setIsLoading(false);
-      }
-    }, 10000); // 10 second timeout
 
     async function checkSubscription() {
       try {
@@ -28,23 +21,33 @@ export default function Index() {
           console.warn('Subscription check failed, defaulting to free:', error);
           setIsSubscribed(false);
         }
-      } finally {
-        if (isMounted) {
-          clearTimeout(timeoutId);
-          setIsLoading(false);
-        }
       }
     }
 
     void checkSubscription();
-    
+
+    // Foreground listener - refresh subscription when app comes back from background
+    const appStateSubscription = AppState.addEventListener('change', (state) => {
+      if (state === 'active') {
+        void checkSubscription();
+      }
+    });
+
+    // RevenueCat listener - automatically update when subscription changes
+    Purchases.addCustomerInfoUpdateListener((info) => {
+      if (isMounted) {
+        setIsSubscribed(info.entitlements.active[ENTITLEMENT_ID]?.isActive ?? false);
+      }
+    });
+
     return () => {
       isMounted = false;
-      clearTimeout(timeoutId);
+      appStateSubscription?.remove();
+      // No need to remove RevenueCat listener — not supported
     };
   }, []);
 
-  if (isLoading) {
+  if (isSubscribed === null) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fdfdfd' }}>
         <ActivityIndicator color="#fff" />
@@ -52,9 +55,5 @@ export default function Index() {
     );
   }
 
-  if (isSubscribed === true) {
-    return <Redirect href="/(protected)/home" />;
-  }
-
-  return <Redirect href="/1-start" />;
-} 
+  return <Redirect href={isSubscribed ? '/(protected)/home' : '/1-start'} />;
+}
