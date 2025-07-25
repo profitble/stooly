@@ -1,142 +1,152 @@
-                    Expo Router Authentication Flow Analysis
-                           📱 Build #39 - Stooly App Implementation
+# 🛠️ Expo Router Auth Flow — Build #40: Stooly App
 
-Timeline & Flow - Build #39:
+### 📱 Context
+
+* **App:** Stooly (poop tracking)
+* **Platform:** iOS 15.1+
+* **Arch:** Expo Router + RevenueCat
+* **Build:** #40 (Bundle: `com.maxta.poop`)
+* **Model:** Paid-only features via subscription
+
+---
+
+### ⚡ Timeline Overview
+
+```
 Time →   0 ms     500 ms    1000 ms   1500 ms   2000 ms
          |--------|---------|---------|---------|
-Root Layout (_layout.tsx)
- [0 ms]   ● App starts + SplashScreen.preventAutoHideAsync()
- [0 ms]   ● RevenueCat initialization begins
- [0-500ms] ● Native splash screen visible during:
-             • revenueCatService.initialize()
-             • revenueCatService.isSubscribed() check
-             • Asset preloading (cardImages array)
- [500 ms] ● Navigation decision made:
-             • ✅ Paid: router.replace('/(protected)/home')
-             • ❌ Unpaid: router.replace('/(public)/1-start')
- [500 ms] ● SplashScreen.hideAsync() called
- [500-1500ms] ● Custom fade overlay animation (1000ms duration)
+Root Layout:
+ [0 ms]     App starts → SplashScreen.preventAutoHideAsync()
+ [0 ms]     RevenueCat.initialize() begins
+ [0–500 ms] Native splash screen remains visible during:
+             - RevenueCat init
+             - Subscription check
+             - Asset preloading (cardImages)
+ [500 ms]   Routing decision made:
+             - ✅ Paid → /home
+             - ❌ Unpaid → /1-start
+             - Then: SplashScreen.hideAsync()
+ [500–1500 ms]  Custom 1000ms fade overlay animation
 
-Protected Layout (_layout.tsx) 
- [500 ms] ● Mounts only if user navigated to /(protected)/home
- [500 ms] ● useState('checking') → immediate useEffect validation
- [500 ms] ● Returns null during validation (no spinner shown)
- [600 ms] ● Subscription revalidation completes
- [600 ms] ● ✅ Valid: renders SafeAreaView + Header + Stack
-           ● ❌ Invalid: router.replace('/(public)/1-start')
+Protected Layout:
+ [500 ms]   Mounted if routed to `/home`
+            → useState('checking') + useEffect
+ [600 ms]   Revalidates subscription:
+             - ✅ Valid → renders app shell
+             - ❌ Invalid → redirects to /1-start
 
-Home Screen (home.tsx)
- [600 ms] ● Mounts after protected layout validation passes
- [600 ms] ● useFocusEffect() runs normally
- [600 ms] ● All UI components render immediately
-
-────────────────────────────────────────────────────────────────────────────────────────
-AUTHENTICATION IMPLEMENTATION - Build #39:
- • **Root Navigation**: Initial subscription check and routing in app/_layout.tsx:60-66
- • **Splash Screen Control**: Native splash remains visible during initialization
- • **Guard Pattern**: subscriptionState !== 'valid' returns null (_layout.tsx:55)
- • **No Loading UI**: Removed ActivityIndicator - validation happens during splash
- • **Validation Flow**: Double-check pattern - root layout + protected layout validation
- • **Error Handling**: Catch blocks redirect to start screen (_layout.tsx:34)
- • **State Management**: isCancelled prevents race condition updates (_layout.tsx:24,32)
- • **Navigation Control**: BackHandler disables hardware back in protected areas (_layout.tsx:45)
-
-COMPONENT LIFECYCLE - Build #39:
- Root Layout:
-    SplashScreen.preventAutoHideAsync() → RevenueCat init → subscription check → navigation → SplashScreen.hideAsync() → fade overlay
- Protected Layout:  
-    useState('checking') → useEffect() → render guard (line 55) → returns null or SafeAreaView
- Home Screen:  
-    Mounts only after protected layout renders → useFocusEffect runs immediately
-
-LOADING/SPLASH IMPLEMENTATION:
- • Native Splash: Controlled by expo-splash-screen, visible during initialization
- • Custom Overlay: Animated fade overlay in root layout with #180b0b background
- • Animation: 1000ms fade out after splash screen hides
- • No Spinner: Removed ActivityIndicator - all loading happens during splash
- • Duration: Splash visible for entire initialization (~500ms typical)
-
-────────────────────────────────────────────────────────────────────────────────────────
-VISUAL FLOW DIAGRAM:
-```
-    ┌─────────────────────────────────────────────────────┐
-    │                  App Launch                         │
-    └─────────────────┬───────────────────────────────────┘
-                      │
-                      ▼
-    ┌─────────────────────────────────────────────────────┐
-    │             Root Layout                             │
-    │         (app/_layout.tsx)                           │
-    │                                                     │
-    │  SplashScreen.preventAutoHideAsync()                │
-    │           │                                         │
-    │           ▼                                         │
-    │  RevenueCat Init + Subscription Check               │
-    │           │                                         │
-    │           ▼                                         │
-    │     ┌─────────────┐                                │
-    │     │ 🖼️ SPLASH   │ ◄─── User sees native splash    │
-    │     │ SCREEN      │                                │
-    │     │ #180b0b     │                                │
-    │     └─────────────┘                                │
-    └─────────────────┬───────────────────────────────────┘
-                      │
-         ┌────────────┴────────────┐
-         │                         │
-         ▼                         ▼
-    ┌─────────────┐          ┌─────────────┐
-    │ ✅ PAID     │          │ ❌ UNPAID   │
-    │             │          │             │
-    │ router      │          │ router      │
-    │ .replace(   │          │ .replace(   │
-    │ 'home')     │          │ '1-start')  │
-    │      │      │          │      │      │
-    │      ▼      │          │      ▼      │
-    │ ┌─────────┐ │          │ ┌─────────┐ │
-    │ │Protected│ │          │ │ Start   │ │
-    │ │ Layout  │ │          │ │ Screen  │ │
-    │ └─────────┘ │          │ └─────────┘ │
-    │      │      │          └─────────────┘
-    │      ▼      │
-    │ ┌─────────┐ │
-    │ │ Home    │ │
-    │ │ Screen  │ │
-    │ │ Renders │ │
-    │ └─────────┘ │
-    └─────────────┘
+Home Screen:
+ [600 ms]   Mounted after validation
+            → useFocusEffect + immediate UI render
 ```
 
-APPLICATION CONTEXT:
- • App: "Stooly" (Poop tracking app)
- • Bundle ID: com.maxta.poop  
- • Current Build: #39 (iOS buildNumber in app.config.ts)
- • Target: iOS 15.1+ with Hermes enabled
- • Architecture: Expo Router + RevenueCat subscriptions
- • Subscription Model: Paywall-protected premium features
+---
 
-DEVELOPMENT ITERATION:
-Build #39 represents the latest implementation with improved splash screen handling.
-The authentication flow now uses native splash screen for loading states instead of custom spinners.
+### 🔐 Authentication Logic (Build #40)
 
-**Root Layout (_layout.tsx) - App Initialization:**
-- Prevents splash screen auto-hide with `SplashScreen.preventAutoHideAsync()`
-- RevenueCat initialization and subscription check happen during splash screen
-- Navigation decision made while native splash is visible:
-  - Paid users: `router.replace('/(protected)/home')`
-  - Unpaid users: `router.replace('/(public)/1-start')`
-- Asset preloading happens serially to prevent crashes
-- Custom fade overlay animation (1000ms) after splash screen hides
+* **Root Navigation:**
 
-**Protected Layout (_layout.tsx) - Access Control:**
-- Uses `useState<'checking' | 'valid' | 'invalid'>('checking')` for state management
-- Async subscription validation with cache invalidation
-- Returns `null` while checking or invalid (no loading spinner)
-- AppState listener for subscription recheck on app resume
-- Hardware back button disabled with `BackHandler`
-- Invalid users redirected to `/(public)/1-start` (not paywall)
+  * Initial routing handled in `app/_layout.tsx` before any UI mounts
+* **Splash Control:**
 
-**Key Changes from Previous Builds:**
-- Removed ActivityIndicator loading spinner from protected layout
-- Navigation logic moved to root layout during splash screen
-- Subscription check happens before any UI renders
-- Unpaid users now go to start screen instead of paywall directly
+  * Native splash stays up during initialization
+  * Custom overlay fades out after routing decision
+* **Guard Logic:**
+
+  * Protected layout blocks rendering until subscription is `'valid'`
+* **No Spinner:**
+
+  * Removed `ActivityIndicator`; all validation happens behind splash
+* **Double Validation:**
+
+  * First in root layout, second in protected layout for redundancy
+* **Error Handling:**
+
+  * Catches redirect to `/1-start` on failure
+* **Back Handling:**
+
+  * Hardware back disabled in protected stack
+* **Race Safety:**
+
+  * Prevents state updates on unmounted component with cancel guard
+
+---
+
+### 🧬 Component Lifecycle Summary
+
+**Root Layout:**
+
+```
+SplashScreen.preventAutoHideAsync()
+→ RevenueCat init
+→ Subscription check
+→ router.replace(...)
+→ SplashScreen.hideAsync()
+→ Fade animation
+```
+
+**Protected Layout:**
+
+```
+useState('checking')
+→ useEffect revalidates subscription
+→ if valid: render SafeAreaView + Header + Stack
+→ if invalid: redirect to /1-start
+```
+
+**Home Screen:**
+
+```
+Mounted only if subscription is valid
+→ useFocusEffect runs immediately
+→ All UI renders right away
+```
+
+---
+
+### 🎨 Splash / Loading UX
+
+| Feature             | Description                                 |
+| ------------------- | ------------------------------------------- |
+| **Native Splash**   | Managed via `expo-splash-screen`            |
+| **Custom Overlay**  | #180b0b full-screen fade (1000ms) post-init |
+| **Spinner Removed** | All loading hidden behind splash            |
+| **Preload Timing**  | \~500ms typical from launch to fade start   |
+
+---
+
+### 🔁 Visual Flow Diagram
+
+```
+     App Launch
+         │
+         ▼
+     Root Layout
+         │
+         ▼
+ ┌───────────────┐
+ │ Native Splash │
+ └──────┬────────┘
+        ▼
+ RevenueCat Init + Subscription Check
+        ▼
+ ┌───────────────┐            ┌───────────────┐
+ │ ✅ Paid       │            │ ❌ Unpaid     │
+ │ /home         │            │ /1-start      │
+ └─────┬─────────┘            └─────┬─────────┘
+       ▼                              ▼
+ Protected Layout                Onboarding Start
+       │
+       ▼
+   Home Screen
+```
+
+---
+
+### 🔄 Key Changes from Previous Builds
+
+* ✅ Moved routing logic up to **Root Layout** — handled before UI mount
+* ✅ **Removed spinner** in Protected Layout → replaced by native splash
+* ✅ Users now land on `/1-start` (not paywall) if unpaid
+* ✅ **Splash hides only after** all assets + validation complete
+* ✅ Double-check pattern ensures no protected access leaks
