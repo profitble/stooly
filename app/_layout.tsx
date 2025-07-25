@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'expo-router';
 import { Stack } from 'expo-router';
 import { View } from 'react-native';
@@ -12,15 +12,12 @@ import * as Sentry from '@sentry/react-native';
 import 'react-native-reanimated';
 import '../global.css';
 
-// Keep splash screen visible while loading fonts
 void SplashScreen.preventAutoHideAsync();
 
-// Initialize Sentry
 Sentry.init({
   dsn: 'https://16f4bb8d3cb24372d4412446665085e0@o4509722657816576.ingest.us.sentry.io/4509722658603008',
 });
 
-// Array of images to preload
 const cardImages = [
   require('@/assets/images/cover.png'),
   require('@/assets/images/icon.png'),
@@ -39,89 +36,61 @@ const cardImages = [
 export default function RootLayout() {
   const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(1)).current;
+  const [showOverlay, setShowOverlay] = useState(true);
 
   useEffect(() => {
-    let isMounted = true;
-    
-    async function initializeApp() {
+    const initializeApp = async () => {
       try {
-        // Try RevenueCat initialization but don't throw on failure
-        try {
-          const initResult = await revenueCatService.initialize();
-          if (!initResult.success) {
-            console.warn('RevenueCat initialization failed:', initResult.error?.message);
-          }
-        } catch (rcError) {
-          console.warn('RevenueCat failed to initialize:', rcError);
+        await revenueCatService.initialize();
+        const paid = await revenueCatService.isSubscribed();
+        router.replace(paid ? '/(protected)/home' : '/(public)/1-start');
+
+        for (const image of cardImages) {
+          await Asset.loadAsync(image);
         }
 
-        // --- Decide navigation while splash screen is still visible ---
-        try {
-          const paid = await revenueCatService.isSubscribed();
-          if (paid) {
-            router.replace('/(protected)/home');
-          } else {
-            // Ensure unpaid users start from onboarding start screen
-            router.replace('/(public)/1-start');
-          }
-        } catch (subErr) {
-          console.warn('Subscription check error:', subErr);
-        }
-        
-        // Serialize asset loading to prevent concurrent crashes
-        for (const image of cardImages) {
-          try {
-            await Asset.loadAsync(image);
-          } catch (error) {
-            console.warn('Failed to load asset:', error);
-          }
-        }
-        
-        // Hide native splash screen first
         await SplashScreen.hideAsync();
-        
-        // Then start fade animation of our overlay
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 1000,
           useNativeDriver: true,
-        }).start();
-      } catch (error) {
-        // Still fade out smoothly on error
-        if (isMounted) {
-          await SplashScreen.hideAsync();
-          Animated.timing(fadeAnim, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }).start();
-        }
+        }).start(() => {
+          setShowOverlay(false); // ✅ Hide overlay completely
+        });
+      } catch {
+        await SplashScreen.hideAsync();
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }).start(() => {
+          setShowOverlay(false); // ✅ Hide on error too
+        });
       }
-    }
+    };
 
     void initializeApp();
-    return () => { 
-      isMounted = false;
-    };
-  }, []);
+  }, [fadeAnim, router]);
 
   return (
     <ErrorBoundary>
       <View style={{ flex: 1 }}>
         <StatusBar style="dark" />
-        <Animated.View 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: '#180b0b',
-            opacity: fadeAnim,
-            zIndex: 999,
-          }}
-          pointerEvents="none"
-        />
+        {showOverlay && (
+          <Animated.View 
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: '#180b0b',
+              opacity: fadeAnim,
+              zIndex: 999,
+            }}
+            pointerEvents="none"
+          />
+        )}
         <Stack
           screenOptions={{
             headerShown: false,
