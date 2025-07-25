@@ -1,94 +1,73 @@
 import { Stack } from 'expo-router';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'expo-router';
-import { BackHandler } from 'react-native';
-import { revenueCatService, ENTITLEMENT_ID } from '@/services/revenueCatService';
+import { BackHandler, View as RNView, ActivityIndicator } from 'react-native';
+import { revenueCatService } from '@/services/revenueCatService';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Header } from '@/components/Header';
-import { View as RNView, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Purchases from 'react-native-purchases';
 
 export const unstable_settings = {
   initialRouteName: 'home',
 };
 
-type RouteParams = {
-  animation?: 'fade' | 'slide_from_right' | 'none';
-  duration?: string;
-};
-
 function ProtectedRoutes() {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
 
   useEffect(() => {
     let isMounted = true;
-    
-    async function checkSubscription() {
+
+    async function verifyAccess() {
       try {
-        const hasActiveSubscription = await revenueCatService.isSubscribed();
-        
+        const ok = await revenueCatService.isSubscribed();
         if (isMounted) {
-          setIsSubscribed(hasActiveSubscription);
-          if (!hasActiveSubscription) {
+          if (!ok) {
             router.replace('/(public)/6-paywall');
-            return;
+          } else {
+            setIsSubscribed(true);
           }
         }
-      } catch (error) {
-        console.warn('Subscription check failed:', error);
+      } catch (e) {
+        console.warn('Subscription check failed:', e);
         if (isMounted) {
-          setIsSubscribed(false);
           router.replace('/(public)/6-paywall');
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
         }
       }
     }
 
-    void checkSubscription();
+    void verifyAccess();
 
-    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
-      return true; // Prevent going back to public routes
-    });
-
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', () => true);
     return () => {
       isMounted = false;
       backHandler.remove();
     };
   }, [router]);
 
-  if (isLoading || isSubscribed === false) {
+  if (isSubscribed === null) {
     return (
-      <RNView style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#fdfdfd' }}>
+      <RNView style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#fdfdfd' }}>
         <ActivityIndicator size="large" color="#a26235" />
       </RNView>
     );
   }
 
-  if (!isSubscribed) {
-    return null;
-  }
-
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: '#fdfdfd' }}>
       <Header />
-      <Stack 
+      <Stack
         screenOptions={{
           headerShown: false,
-          animation: 'none',
+          animation: 'none', // ✅ no transitions
         }}
       >
-        <Stack.Screen 
-          name="camera" 
-          options={{ 
+        <Stack.Screen
+          name="camera"
+          options={{
             presentation: 'modal',
-            animation: 'slide_from_bottom',
-          }} 
+            animation: 'slide_from_bottom', // ✅ explicit override
+          }}
         />
       </Stack>
     </SafeAreaView>
@@ -101,4 +80,4 @@ export default function ProtectedLayout() {
       <ProtectedRoutes />
     </ErrorBoundary>
   );
-} 
+}
